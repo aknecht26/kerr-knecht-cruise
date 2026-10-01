@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Southern Caribbean Cruise Experience & Planner</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+
+        .heading-serif {
+            font-family: 'Cinzel', serif;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+
+        /* Glassmorphism effects */
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Tab active state transitions */
+        .tab-btn {
+            transition: all 0.25s ease-in-out;
+        }
+        .tab-btn.active {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
+        }
+
+        /* Print formatting override */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: white !important;
+                color: #0f172a !important;
+                font-size: 10pt;
+            }
+            .glass-panel, .glass-card {
+                background: white !important;
+                border: 1px solid #cbd5e1 !important;
+                box-shadow: none !important;
+                color: #0f172a !important;
+            }
+            .heading-serif, h1, h2, h3, h4, strong {
+                color: #0f172a !important;
+            }
+            .text-slate-300, .text-slate-400, .text-slate-200 {
+                color: #334155 !important;
+            }
+            .text-amber-400, .text-amber-300 {
+                color: #d97706 !important;
+            }
+            .text-blue-400, .text-blue-300 {
+                color: #1d4ed8 !important;
+            }
+            .page-break-before {
+                page-break-before: always;
+            }
+            .print-border {
+                border: 1px solid #94a3b8 !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
+
+    <!-- STICKY TOP BAR / NAVIGATION -->
+    <header class="no-print sticky top-0 z-50 glass-panel border-b border-slate-700/60 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+            <!-- Brand / Title -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                    <i class="fa-solid fa-compass text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="heading-serif font-bold text-lg md:text-xl text-white tracking-wide">Southern Caribbean Expeditions</h1>
+                    <p class="text-xs text-amber-400/90 font-medium">Royal Caribbean 8-Night Interactive Vacation Planner</p>
+                </div>
+            </div>
+
+            <!-- Global Actions & Print Button -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button onclick="openQuizModal()" class="bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs sm:text-sm font-semibold px-3 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                    <span class="hidden sm:inline">Find My Match</span> Quiz
+                </button>
+                <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3.5 py-2 rounded-lg text-xs sm:text-sm transition flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print / Save PDF</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- NAVIGATION TABS -->
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-3 pt-1">
+            <div class="flex items-center gap-1 sm:gap-2 overflow-x-auto custom-scrollbar pb-1 text-xs sm:text-sm font-medium">
+                <button onclick="switchTab('dashboard')" id="tab-dashboard" class="tab-btn active px-4 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-chart-line"></i> Vacation Overview & Matrix
+                </button>
+                <button onclick="switchTab('calculator')" id="tab-calculator" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-calculator"></i> Budget & Financing Planner
+                </button>
+                <button onclick="switchTab('itinerary')" id="tab-itinerary" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-map-location-dot"></i> Port Routes & Day Stepper
+                </button>
+                <button onclick="switchTab('ships')" id="tab-ships" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-ship"></i> Ship Hardware & Venues
+                </button>
+                <button onclick="switchTab('airfare')" id="tab-airfare" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-plane"></i> Airfare Elevation
+                </button>
+                <button onclick="switchTab('deckplans')" id="tab-deckplans" class="tab-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-xl flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-layer-group"></i> Deck Plans & Layouts
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 space-y-8">
+
+        <!-- PRINT HEADER BANNER (Visible only in print mode) -->
+        <div class="hidden print:block mb-6 border-b-2 border-slate-900 pb-4">
+            <h1 class="heading-serif text-3xl font-bold text-slate-900">SOUTHERN CARIBBEAN CRUISE VACATION BROCHURE</h1>
+            <p class="text-slate-700 text-sm mt-1">Royal Caribbean 8-Night Expeditions Departing Port Everglades (Fort Lauderdale, FL)</p>
+            <p class="text-xs text-slate-500 mt-0.5">Custom Package & Comparative Financial Breakdown for Couple Escapes</p>
+        </div>
+
+        <!-- HERO BANNER (Screen display) -->
+        <section class="no-print relative rounded-3xl overflow-hidden glass-panel border border-slate-700/80 p-6 md:p-10 bg-gradient-to-r from-slate-950 via-blue-950 to-slate-900 shadow-2xl">
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute right-1/3 -top-20 w-60 h-60 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                <div class="max-w-3xl space-y-3">
+                    <div class="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold uppercase tracking-wider px-3.5 py-1.5 rounded-full">
+                        <i class="fa-solid fa-compass text-amber-400"></i> Royal Caribbean 8-Night Escapes
+                    </div>
+                    <h2 class="heading-serif text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                        Explore the Southern Caribbean
+                    </h2>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Compare two premier 8-night itineraries departing from <strong class="text-white">Port Everglades (Fort Lauderdale, FL)</strong>. Tailored for couples with integrated flight connections, round-trip Delta airfare (arriving 1 day prior), and flexible low-monthly financing.
+                    </p>
+                </div>
+
+                <!-- Live Quick Stats Card -->
+                <div class="w-full lg:w-auto glass-card p-5 rounded-2xl border border-slate-700/60 flex flex-row lg:flex-col justify-between items-center lg:items-end gap-4 min-w-[240px]">
+                    <div class="text-left lg:text-right">
+                        <div class="text-xs text-slate-400 uppercase tracking-widest font-semibold">Starting From</div>
+                        <div class="text-2xl sm:text-3xl font-extrabold text-amber-400 mt-0.5">$169<span class="text-sm font-normal text-slate-300">.31 / mo per person</span></div>
+                        <div class="text-[11px] text-slate-400 mt-0.5"><i class="fa-solid fa-users mr-1 text-blue-400"></i> $338.62 / mo per couple</div>
+                    </div>
+                    <button onclick="switchTab('calculator')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-md">
+                        <i class="fa-solid fa-sliders"></i> Customize Budget
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 1: DASHBOARD / OVERVIEW & MATRIX -->
+        <div id="content-dashboard" class="space-y-8">
+
+            <!-- Interactive Global Filters Bar for Overview -->
+            <div class="no-print glass-panel p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4 border border-slate-700/60">
+                <div class="flex items-center gap-2 text-xs sm:text-sm text-slate-300">
+                    <i class="fa-solid fa-filter text-amber-400"></i>
+                    <span class="font-semibold text-white">Live Matrix Customizer:</span>
+                </div>
+                <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm">
+                    <!-- Traveler Count Toggle -->
+                    <div class="flex items-center gap-2">
+                        <label for="matrix-travelers" class="text-slate-400 font-medium">Travelers:</label>
+                        <select id="matrix-travelers" onchange="syncGlobalTravelers(this.value)" class="bg-slate-900 text-white border border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-amber-400">
+                            <option value="1">1 Person (Solo)</option>
+                            <option value="2" selected>2 Persons (Couple)</option>
+                            <option value="4">4 Persons (Family/Group)</option>
+                        </select>
+                    </div>
+                    <!-- Airfare Class Toggle -->
+                    <div class="flex items-center gap-2">
+                        <label for="matrix-flight" class="text-slate-400 font-medium">Flight Upgrade:</label>
+                        <select id="matrix-flight" onchange="syncGlobalFlight(this.value)" class="bg-slate-900 text-white border border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-amber-400">
+                            <option value="main">Main Cabin ($274/person)</option>
+                            <option value="comfort" selected>Comfort+ ($314/person)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 1: FINANCIAL COMPARISON TABLE -->
+            <section class="glass-panel rounded-2xl p-6 sm:p-8 border border-slate-700/80 shadow-xl print-border">
+                <div class="flex items-center gap-3 border-b border-slate-700/80 pb-4 mb-6">
+                    <span class="w-9 h-9 rounded-xl bg-blue-600 text-amber-300 flex items-center justify-center font-bold text-base shadow-md">1</span>
+                    <div>
+                        <h3 class="heading-serif text-xl sm:text-2xl font-bold text-white">Vacation Overview & Financial Comparison</h3>
+                        <p class="text-xs sm:text-sm text-slate-400">Comprehensive cost breakdown including cruise financing and round-trip Delta airfare</p>
+                    </div>
+                </div>
+
+                <!-- Table Container -->
+                <div class="overflow-x-auto custom-scrollbar rounded-xl border border-slate-700/80">
+                    <table class="w-full text-left text-xs sm:text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900/90 text-white border-b border-slate-700">
+                                <th class="p-4 font-semibold w-1/3">Category / Expense</th>
+                                <th class="p-4 font-semibold w-1/3 bg-blue-950/70 border-x border-slate-700/60 text-amber-300">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-crown text-amber-400"></i>
+                                        <span>Option 1: Legend of the Seas</span>
+                                    </div>
+                                    <div class="text-[11px] text-slate-400 font-normal mt-0.5">Icon Class (Next-Gen Mega-Ship)</div>
+                                </th>
+                                <th class="p-4 font-semibold w-1/3 text-slate-200">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-anchor text-blue-400"></i>
+                                        <span>Option 2: Adventure of the Seas</span>
+                                    </div>
+                                    <div class="text-[11px] text-slate-400 font-normal mt-0.5">Voyager Class (Classic Favorite)</div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800/80 bg-slate-900/40 text-slate-300">
+                            <tr>
+                                <td class="p-4 font-medium text-slate-200 bg-slate-900/60">Sailing Window</td>
+                                <td class="p-4 font-bold text-white">April 3 – April 11</td>
+                                <td class="p-4 font-bold text-white">April 10 – April 18</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-slate-200 bg-slate-900/60">Flight Travel Dates</td>
+                                <td class="p-4">April 2 – April 11 <span class="text-[11px] text-slate-400 block">(Fly in 1 day prior)</span></td>
+                                <td class="p-4">April 9 – April 18 <span class="text-[11px] text-slate-400 block">(Fly in 1 day prior)</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-slate-200 bg-slate-900/60">Cruise Monthly Financing Plan</td>
+                                <td class="p-4 font-bold text-amber-300 bg-blue-950/30">
+                                    <div class="text-base" id="mat-opt1-monthly-total">$338.62 / mo <span class="text-xs font-normal text-slate-400">(Couple total)</span></div>
+                                    <div class="text-xs text-amber-400/90 font-semibold mt-1" id="mat-opt1-monthly-person">
+                                        <i class="fa-solid fa-user text-amber-400 mr-1"></i>$169.31 / mo per person <span class="font-normal text-slate-400">(12 mos)</span>
+                                    </div>
+                                </td>
+                                <td class="p-4 font-bold text-amber-300">
+                                    <div class="text-base" id="mat-opt2-monthly-total">$383.35 / mo <span class="text-xs font-normal text-slate-400">(Couple total)</span></div>
+                                    <div class="text-xs text-amber-400/90 font-semibold mt-1" id="mat-opt2-monthly-person">
+                                        <i class="fa-solid fa-user text-amber-400 mr-1"></i>$191.68 / mo per person <span class="font-normal text-slate-400">(6 mos)</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-slate-200 bg-slate-900/60">Total Stateroom Cost</td>
+                                <td class="p-4 font-semibold text-white bg-blue-950/30" id="mat-opt1-stateroom">
+                                    $4,063.44 <span class="text-xs font-normal text-slate-400">($2,031.72 / person)</span>
+                                </td>
+                                <td class="p-4 font-semibold text-white" id="mat-opt2-stateroom">
+                                    $2,300.10 <span class="text-xs font-normal text-slate-400">($1,150.05 / person)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-slate-200 bg-slate-900/60">Delta Main Cabin Airfare</td>
+                                <td class="p-4" id="mat-opt1-main-air">$548.00 <span class="text-xs text-slate-400">($274.00 / person)</span></td>
+                                <td class="p-4" id="mat-opt2-main-air">$548.00 <span class="text-xs text-slate-400">($274.00 / person)</span></td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-slate-200 bg-slate-900/60">Delta Comfort+ Airfare</td>
+                                <td class="p-4" id="mat-opt1-comfort-air">$628.00 <span class="text-xs text-slate-400">($314.00 / person)</span></td>
+                                <td class="p-4" id="mat-opt2-comfort-air">$628.00 <span class="text-xs text-slate-400">($314.00 / person)</span></td>
+                            </tr>
+                            <tr class="bg-blue-950/40">
+                                <td class="p-4 font-bold text-white bg-slate-900/80">Active Selection Grand Total</td>
+                                <td class="p-4 font-extrabold text-blue-300 text-base" id="mat-opt1-grand">
+                                    $4,691.44 <span class="text-xs font-normal text-slate-300">($2,345.72 / person)</span>
+                                </td>
+                                <td class="p-4 font-extrabold text-emerald-400 text-base" id="mat-opt2-grand">
+                                    $2,928.10 <span class="text-xs font-normal text-slate-300">($1,464.05 / person)</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-medium text-slate-200 bg-slate-900/60">Stateroom Price Variance</td>
+                                <td class="p-4 text-amber-400 font-bold bg-blue-950/30">
+                                    Premium of +$1,763.34 <span class="text-xs font-normal text-slate-400 block">(+$881.67 / person)</span>
+                                </td>
+                                <td class="p-4 text-emerald-400 font-bold">
+                                    Save $1,763.34 per couple <span class="text-xs font-normal text-slate-400 block">($881.67 / person)</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SHIP HIGHLIGHT CARDS COMPARISON -->
+            <div class="grid lg:grid-cols-2 gap-6">
+                <!-- Legend of the Seas Card -->
+                <div class="glass-panel rounded-2xl p-6 border border-blue-500/30 bg-gradient-to-b from-blue-950/40 to-slate-900/90 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="bg-blue-600 text-amber-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Icon Class Flagship</span>
+                                <h4 class="heading-serif text-2xl font-bold text-white mt-2">Legend of the Seas</h4>
+                                <p class="text-xs text-slate-300 mt-0.5">Apr 3 – Apr 11 | Port Everglades</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-600/20 border border-blue-400/30 flex items-center justify-center text-blue-400 text-2xl">
+                                <i class="fa-solid fa-ship"></i>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3 text-xs sm:text-sm text-slate-300 mb-6">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-ruler-combined text-blue-400 mt-1"></i>
+                                <span><strong>Gigantic Scale:</strong> 248,663 Gross Tons | 20 decks | 5,610–7,600 guest capacity.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-layer-group text-blue-400 mt-1"></i>
+                                <span><strong>8 Signature Neighborhoods:</strong> Surfside, Central Park, AquaDome, Chill Island & more.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-water-ladder text-blue-400 mt-1"></i>
+                                <span><strong>Water Thrills:</strong> 7 pools, 10 hot tubs, <em>Swim & Tonic</em> swim-up bar, <em>The Hideaway</em> suspended infinity pool, & <em>Category 6</em> waterpark.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-utensils text-blue-400 mt-1"></i>
+                                <span><strong>Dining & Shows:</strong> 28+ dining spots including AquaDome Market, plus high-diving AquaDome shows and Lou's Lounge live jazz.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Option 1 Route</span>
+                            <span class="text-xs font-semibold text-amber-300">Aruba • Curaçao • Cabo Rojo • CocoCay</span>
+                        </div>
+                        <button onclick="switchTab('ships')" class="text-xs bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 rounded-lg font-semibold transition">
+                            Explore Venues
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Adventure of the Seas Card -->
+                <div class="glass-panel rounded-2xl p-6 border border-slate-700/80 bg-gradient-to-b from-slate-900/90 to-slate-950 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <span class="bg-slate-800 text-slate-300 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Voyager Class Favorite</span>
+                                <h4 class="heading-serif text-2xl font-bold text-white mt-2">Adventure of the Seas</h4>
+                                <p class="text-xs text-slate-300 mt-0.5">Apr 10 – Apr 18 | Port Everglades</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 text-2xl">
+                                <i class="fa-solid fa-anchor"></i>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-3 text-xs sm:text-sm text-slate-300 mb-6">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-ruler-combined text-slate-400 mt-1"></i>
+                                <span><strong>Streamlined Scale:</strong> 138,193 Gross Tons | 14–15 decks | 3,114 guests for intimate navigation.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-store text-slate-400 mt-1"></i>
+                                <span><strong>Royal Promenade:</strong> Central indoor boulevard lined with cafes, pubs, shops, and street parties.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-person-swimming text-slate-400 mt-1"></i>
+                                <span><strong>Classic Thrills:</strong> FlowRider surf simulator, The Perfect Storm racer waterslides, Rock Wall, & Solarium.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-compact-disc text-slate-400 mt-1"></i>
+                                <span><strong>Dining & Shows:</strong> 9 targeted dining spots (Chops Grille, Izumi, Giovanni's), ice-skating spectacles in Studio B, Schooner Bar piano sing-alongs.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800 flex justify-between items-center">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Option 2 Route</span>
+                            <span class="text-xs font-semibold text-emerald-400">Nassau • Cabo Rojo • Aruba • Curaçao</span>
+                        </div>
+                        <button onclick="switchTab('ships')" class="text-xs bg-slate-800 hover:bg-slate-700 text-white px-3.5 py-2 rounded-lg font-semibold transition border border-slate-700">
+                            Explore Venues
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: BUDGET & FINANCING PLANNER -->
+        <div id="content-calculator" class="hidden space-y-8">
+            <div class="glass-panel rounded-2xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl">
+                <div class="flex items-center gap-3 border-b border-slate-700/80 pb-4 mb-6">
+                    <span class="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-base shadow-md">
+                        <i class="fa-solid fa-calculator"></i>
+                    </span>
+                    <div>
+                        <h3 class="heading-serif text-xl sm:text-2xl font-bold text-white">Custom Vacation Budget & Financing Estimator</h3>
+                        <p class="text-xs sm:text-sm text-slate-400">Tailor flight classes, add-ons, and cruise fare monthly financing terms with live price updates</p>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-12 gap-8">
+                    <!-- Controls Column -->
+                    <div class="lg:col-span-7 space-y-6">
+
+                        <!-- Traveler Count Selector -->
+                        <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-800">
+                            <label class="text-xs font-bold text-amber-400 uppercase tracking-wider block mb-2">1. Select Number of Travelers</label>
+                            <div class="flex items-center gap-4">
+                                <input type="range" id="calc-travelers-range" min="1" max="6" value="2" oninput="updateCalculator()" class="w-full accent-amber-500">
+                                <span id="calc-travelers-val" class="font-extrabold text-lg text-white bg-slate-800 px-3 py-1 rounded-lg border border-slate-700 min-w-[70px] text-center">2 Guests</span>
+                            </div>
+                        </div>
+
+                        <!-- Airfare Preference -->
+                        <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-800">
+                            <label class="text-xs font-bold text-amber-400 uppercase tracking-wider block mb-2">2. Delta Flight Class Tier (Paid Upfront)</label>
+                            <div class="grid grid-cols-2 gap-3">
+                                <button type="button" onclick="setCalcFlight('main')" id="calc-btn-main" class="p-3 rounded-lg border text-left text-xs sm:text-sm transition flex flex-col justify-between border-slate-700 bg-slate-800 text-slate-300">
+                                    <div class="font-bold">Main Cabin</div>
+                                    <div class="text-xs text-slate-400 mt-1">$274.00 / person</div>
+                                </button>
+                                <button type="button" onclick="setCalcFlight('comfort')" id="calc-btn-comfort" class="p-3 rounded-lg border text-left text-xs sm:text-sm transition flex flex-col justify-between border-amber-500/50 bg-amber-500/10 text-amber-300 ring-1 ring-amber-500/30">
+                                    <div class="font-bold flex items-center justify-between">
+                                        <span>Delta Comfort+</span>
+                                        <i class="fa-solid fa-circle-check text-amber-400"></i>
+                                    </div>
+                                    <div class="text-xs text-amber-400/80 mt-1">$314.00 / person (+$40)</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Optional Packages / Add-ons -->
+                        <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-800 space-y-3">
+                            <label class="text-xs font-bold text-amber-400 uppercase tracking-wider block">3. Optional Onboard Packages (Paid Upfront)</label>
+
+                            <label class="flex items-center justify-between p-2.5 rounded-lg bg-slate-800/80 border border-slate-700/60 cursor-pointer hover:bg-slate-800">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" id="calc-addon-beverage" onchange="updateCalculator()" class="w-4 h-4 accent-amber-500 rounded">
+                                    <div>
+                                        <div class="text-xs sm:text-sm font-semibold text-white">Deluxe Unlimited Beverage Package</div>
+                                        <div class="text-[11px] text-slate-400">Approx. $75/person/day + gratuity</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold text-amber-400">+$600/person</span>
+                            </label>
+
+                            <label class="flex items-center justify-between p-2.5 rounded-lg bg-slate-800/80 border border-slate-700/60 cursor-pointer hover:bg-slate-800">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" id="calc-addon-wifi" onchange="updateCalculator()" class="w-4 h-4 accent-amber-500 rounded">
+                                    <div>
+                                        <div class="text-xs sm:text-sm font-semibold text-white">VOOM High-Speed Surf & Stream Wi-Fi</div>
+                                        <div class="text-[11px] text-slate-400">Unlimited 1 device per stateroom</div>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-bold text-amber-400">+$160 total</span>
+                            </label>
+                        </div>
+
+                        <!-- Financing Term Selector -->
+                        <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-800">
+                            <div class="flex flex-wrap items-center justify-between gap-1 mb-2">
+                                <label class="text-xs font-bold text-amber-400 uppercase tracking-wider">4. Cruise Fare Financing Term</label>
+                                <span class="text-[11px] text-amber-300/90 font-medium"><i class="fa-solid fa-circle-info mr-1"></i>Financing applies strictly to Cruise Fare</span>
+                            </div>
+                            <div class="grid grid-cols-4 gap-2 text-center text-xs">
+                                <button type="button" onclick="setCalcTerm(6)" id="term-btn-6" class="p-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 font-semibold">6 Mos</button>
+                                <button type="button" onclick="setCalcTerm(12)" id="term-btn-12" class="p-2.5 rounded-lg border border-amber-500/50 bg-amber-500/10 text-amber-300 font-bold ring-1 ring-amber-500/30">12 Mos</button>
+                                <button type="button" onclick="setCalcTerm(18)" id="term-btn-18" class="p-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 font-semibold">18 Mos</button>
+                                <button type="button" onclick="setCalcTerm(24)" id="term-btn-24" class="p-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 font-semibold">24 Mos</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Live Quote Summary Column -->
+                    <div class="lg:col-span-5 flex flex-col justify-between bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 p-6 rounded-2xl border border-blue-500/30 shadow-xl">
+                        <div>
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Live Quote Summary</span>
+                                <span id="calc-guests-badge" class="bg-blue-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-full">2 Guests</span>
+                            </div>
+
+                            <!-- Option 1 Summary -->
+                            <div class="mb-6 p-4 rounded-xl bg-slate-950/60 border border-blue-500/20">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="font-bold text-white text-sm">Option 1: Legend of the Seas</span>
+                                    <span class="text-[11px] bg-blue-900 text-amber-300 px-2 py-0.5 rounded font-semibold">Icon Class</span>
+                                </div>
+                                <div class="text-2xl font-extrabold text-amber-400 mt-2" id="out-opt1-grand">$4,691.44</div>
+                                <div class="text-xs text-slate-300 font-medium mb-2" id="out-opt1-person">$2,345.72 / person grand total</div>
+
+                                <div class="space-y-2 pt-2 border-t border-slate-800/80 text-xs">
+                                    <div class="flex justify-between items-baseline">
+                                        <span class="text-slate-400">Cruise Fare Financing:</span>
+                                        <div class="text-right">
+                                            <span class="text-base font-bold text-amber-300" id="out-opt1-monthly">$338.62 / mo</span>
+                                            <span class="text-[11px] text-slate-400 block" id="out-opt1-monthly-pp">($169.31/mo per person for cruise fare)</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between items-center text-slate-400 text-[11px]">
+                                        <span>Upfront Costs (Flights & Add-ons):</span>
+                                        <span class="font-semibold text-slate-200" id="out-opt1-upfront">$628.00 upfront</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Option 2 Summary -->
+                            <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
+                                <div class="flex justify-between items-start mb-1">
+                                    <span class="font-bold text-white text-sm">Option 2: Adventure of the Seas</span>
+                                    <span class="text-[11px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded font-semibold">Voyager Class</span>
+                                </div>
+                                <div class="text-2xl font-extrabold text-emerald-400 mt-2" id="out-opt2-grand">$2,928.10</div>
+                                <div class="text-xs text-slate-300 font-medium mb-2" id="out-opt2-person">$1,464.05 / person grand total</div>
+
+                                <div class="space-y-2 pt-2 border-t border-slate-800/80 text-xs">
+                                    <div class="flex justify-between items-baseline">
+                                        <span class="text-slate-400">Cruise Fare Financing:</span>
+                                        <div class="text-right">
+                                            <span class="text-base font-bold text-emerald-400" id="out-opt2-monthly">$191.68 / mo</span>
+                                            <span class="text-[11px] text-slate-400 block" id="out-opt2-monthly-pp">($95.84/mo per person for cruise fare)</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between items-center text-slate-400 text-[11px]">
+                                        <span>Upfront Costs (Flights & Add-ons):</span>
+                                        <span class="font-semibold text-slate-200" id="out-opt2-upfront">$628.00 upfront</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Variance Badge -->
+                            <div class="mt-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 font-semibold text-center" id="out-variance-text">
+                                Selecting Option 2 saves $1,763.34 total ($881.67 / person)
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="mt-6 pt-4 border-t border-slate-800 flex gap-3">
+                            <button onclick="copyQuoteSummary()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs py-3 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-amber-500/20">
+                                <i class="fa-solid fa-copy"></i> Copy Quote Breakdown
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: PORT ROUTES & DAY STEPPER -->
+        <div id="content-itinerary" class="hidden space-y-8">
+            <section class="glass-panel rounded-2xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-700/80 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-blue-600 text-amber-300 flex items-center justify-center font-bold text-base shadow-md">
+                            <i class="fa-solid fa-map"></i>
+                        </span>
+                        <div>
+                            <h3 class="heading-serif text-xl sm:text-2xl font-bold text-white">Itinerary Dynamics & Ports of Call</h3>
+                            <p class="text-xs sm:text-sm text-slate-400">Explore ports and step day-by-day through both 8-night journeys</p>
+                        </div>
+                    </div>
+
+                    <!-- Ship Route Selector -->
+                    <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-700 text-xs font-semibold">
+                        <button onclick="setItineraryShip('opt1')" id="itin-btn-opt1" class="px-3.5 py-1.5 rounded-lg bg-blue-600 text-white shadow-sm transition">Option 1: Legend</button>
+                        <button onclick="setItineraryShip('opt2')" id="itin-btn-opt2" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition">Option 2: Adventure</button>
+                    </div>
+                </div>
+
+                <!-- Active Route Banner -->
+                <div id="itin-route-banner" class="p-4 rounded-xl bg-blue-950/50 border border-blue-500/30 text-xs sm:text-sm text-blue-200 mb-6 flex items-center gap-3">
+                    <i class="fa-solid fa-route text-amber-400 text-xl flex-shrink-0"></i>
+                    <div>
+                        <strong class="text-white block text-sm" id="itin-banner-title">Option 1 Sailing Route (Legend of the Seas):</strong>
+                        <span id="itin-banner-route">Fort Lauderdale ➔ Oranjestad (Aruba) ➔ Willemstad (Curaçao) ➔ Cabo Rojo (Dominican Republic) ➔ Perfect Day at CocoCay ➔ Fort Lauderdale</span>
+                    </div>
+                </div>
+
+                <!-- DAY STEPPER CONTROLS -->
+                <div class="mb-8 bg-slate-900/80 p-4 rounded-2xl border border-slate-800">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 flex justify-between items-center">
+                        <span>Select Day to Inspect Timeline:</span>
+                        <span id="day-stepper-title" class="text-amber-400 font-extrabold text-sm">Day 1: Embarkation</span>
+                    </div>
+
+                    <!-- Day Buttons -->
+                    <div class="grid grid-cols-5 sm:grid-cols-9 gap-1.5 sm:gap-2 text-xs font-bold text-center">
+                        <button onclick="setItineraryDay(1)" id="day-btn-1" class="day-step-btn py-2.5 rounded-lg bg-amber-500 text-slate-950 shadow-md">Day 1</button>
+                        <button onclick="setItineraryDay(2)" id="day-btn-2" class="day-step-btn py-2.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Day 2</button>
+                        <button onclick="setItineraryDay(3)" id="day-btn-3" class="day-step-btn py-2.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Day 3</button>
+                        <button onclick="setItineraryDay(4)" id="day-btn-4" class="day-step-btn py-2.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Day 4</button>
+                        <button onclick="setItineraryDay(5)" id="day-btn-5" class="day-step-btn py-2.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Day 5</button>
+                        <button onclick="setItineraryDay(6)" id="day-btn-6" class="day-step-btn py-2.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Day 6</button>
+                        <button onclick="setItineraryDay(7)" id="day-btn-7" class="day-step-btn py-2.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Day 7</button>
+                        <button onclick="setItineraryDay(8)" id="day-btn-8" class="day-step-btn py-2.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Day 8</button>
+                        <button onclick="setItineraryDay(9)" id="day-btn-9" class="day-step-btn py-2.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700">Day 9</button>
+                    </div>
+
+                    <!-- Day Content Display Box -->
+                    <div class="mt-4 p-5 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span id="day-location-badge" class="bg-blue-600 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full uppercase">Port Everglades</span>
+                                <span id="day-time-badge" class="text-xs text-slate-400 font-mono">Departs 4:00 PM</span>
+                            </div>
+                            <h4 id="day-activity-title" class="text-lg font-bold text-white">Fort Lauderdale Embarkation</h4>
+                            <p id="day-activity-desc" class="text-xs sm:text-sm text-slate-300 max-w-2xl">
+                                Board your ship at Port Everglades. Explore the decks, settle into your stateroom, enjoy sail-away drinks, and attend the evening welcome show.
+                            </p>
+                        </div>
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 text-2xl flex-shrink-0" id="day-icon-box">
+                            <i class="fa-solid fa-ship"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ALL PORTS GRID CARDS -->
+                <div class="border-t border-slate-800 pt-6">
+                    <h4 class="heading-serif font-bold text-lg text-white mb-4">Port Highlights Overview</h4>
+                    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs sm:text-sm">
+
+                        <!-- Willemstad, Curaçao -->
+                        <div class="glass-card p-4 rounded-xl border border-slate-700/80 hover:border-amber-500/40 transition">
+                            <div class="text-amber-400 font-bold text-xs uppercase tracking-wider mb-1"><i class="fa-solid fa-city mr-1"></i> Both Ships</div>
+                            <h4 class="font-bold text-white text-base mb-1">Willemstad, Curaçao</h4>
+                            <p class="text-slate-300 text-xs leading-relaxed">
+                                Explore vibrant pastel Dutch colonial architecture, cross the swinging Queen Emma Pontoon Bridge, and sample Blue Curaçao at the historic distillery.
+                            </p>
+                        </div>
+
+                        <!-- Oranjestad, Aruba -->
+                        <div class="glass-card p-4 rounded-xl border border-slate-700/80 hover:border-amber-500/40 transition">
+                            <div class="text-amber-400 font-bold text-xs uppercase tracking-wider mb-1"><i class="fa-solid fa-umbrella-beach mr-1"></i> Both Ships</div>
+                            <h4 class="font-bold text-white text-base mb-1">Oranjestad, Aruba</h4>
+                            <p class="text-slate-300 text-xs leading-relaxed">
+                                Relax on pristine white sands at Eagle Beach or Palm Beach, ride the free downtown trolley loop, or take off-road 4x4 island tours.
+                            </p>
+                        </div>
+
+                        <!-- Cabo Rojo, Dominican Republic -->
+                        <div class="glass-card p-4 rounded-xl border border-slate-700/80 hover:border-amber-500/40 transition">
+                            <div class="text-amber-400 font-bold text-xs uppercase tracking-wider mb-1"><i class="fa-solid fa-water mr-1"></i> Both Ships</div>
+                            <h4 class="font-bold text-white text-base mb-1">Cabo Rojo, Dominican Republic</h4>
+                            <p class="text-slate-300 text-xs leading-relaxed">
+                                Discover pristine eco-beaches, crystal turquoise waters, coastal nature reserves, and newly developed beachside port amenities.
+                            </p>
+                        </div>
+
+                        <!-- Exclusive Ports -->
+                        <div class="glass-card p-4 rounded-xl border border-blue-500/40 bg-blue-950/20 hover:border-blue-400 transition">
+                            <div class="text-blue-300 font-bold text-xs uppercase tracking-wider mb-1"><i class="fa-solid fa-star mr-1"></i> Exclusive Ports</div>
+                            <h4 class="font-bold text-white text-base mb-1">CocoCay vs. Nassau</h4>
+                            <p class="text-slate-300 text-xs leading-relaxed">
+                                <strong class="text-amber-300 block mb-0.5">Option 1:</strong> Private island thrills at Perfect Day at CocoCay.
+                                <strong class="text-emerald-400 block mt-1 mb-0.5">Option 2:</strong> Historic downtown Nassau, Junkanoo Beach & Atlantis Resort.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 4: SHIP HARDWARE & VENUES EXPLORER -->
+        <div id="content-ships" class="hidden space-y-8">
+            <section class="glass-panel rounded-2xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-700/80 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-blue-600 text-amber-300 flex items-center justify-center font-bold text-base shadow-md">
+                            <i class="fa-solid fa-ship"></i>
+                        </span>
+                        <div>
+                            <h3 class="heading-serif text-xl sm:text-2xl font-bold text-white">Ship Hardware, Neighborhoods & Dining</h3>
+                            <p class="text-xs sm:text-sm text-slate-400">Filter amenities, dining spots, and onboard nightlife across both ships</p>
+                        </div>
+                    </div>
+
+                    <!-- Category Filter Tabs -->
+                    <div class="flex flex-wrap gap-1.5 bg-slate-900 p-1 rounded-xl border border-slate-700 text-xs font-semibold">
+                        <button onclick="filterVenues('all')" id="vfilter-all" class="vfilter-btn px-3 py-1.5 rounded-lg bg-blue-600 text-white">All Features</button>
+                        <button onclick="filterVenues('dining')" id="vfilter-dining" class="vfilter-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white">Dining</button>
+                        <button onclick="filterVenues('thrills')" id="vfilter-thrills" class="vfilter-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white">Thrills & Pools</button>
+                        <button onclick="filterVenues('nightlife')" id="vfilter-nightlife" class="vfilter-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white">Nightlife</button>
+                    </div>
+                </div>
+
+                <!-- VENUE CARDS GRID -->
+                <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5" id="venues-container">
+
+                    <!-- Legend Venue: AquaDome -->
+                    <div class="venue-card glass-card p-5 rounded-2xl border border-blue-500/30 bg-slate-900/80 flex flex-col justify-between" data-category="nightlife thrills" data-ship="opt1">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] bg-blue-900 text-amber-300 font-bold px-2 py-0.5 rounded uppercase">Legend of the Seas</span>
+                                <i class="fa-solid fa-gem text-blue-400"></i>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-1">The AquaDome & Market</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                Glass-domed indoor oasis featuring high-diving acrobatic water shows by night, and a 5-stall complimentary food hall by day (Cajun, Mexican, Tapas, Korean, Crepes).
+                            </p>
+                        </div>
+                        <div class="text-[11px] text-slate-400 border-t border-slate-800 pt-2 flex justify-between">
+                            <span>Neighborhood: AquaDome</span>
+                            <span class="text-amber-400 font-semibold">Complimentary & Specialty</span>
+                        </div>
+                    </div>
+
+                    <!-- Legend Venue: Category 6 & Swim & Tonic -->
+                    <div class="venue-card glass-card p-5 rounded-2xl border border-blue-500/30 bg-slate-900/80 flex flex-col justify-between" data-category="thrills" data-ship="opt1">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] bg-blue-900 text-amber-300 font-bold px-2 py-0.5 rounded uppercase">Legend of the Seas</span>
+                                <i class="fa-solid fa-water-ladder text-blue-400"></i>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-1">Category 6 & Swim & Tonic</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                The largest waterpark at sea with 6 record-breaking slides, combined with Royal Caribbean's first swim-up pool bar and The Hideaway suspended infinity pool.
+                            </p>
+                        </div>
+                        <div class="text-[11px] text-slate-400 border-t border-slate-800 pt-2 flex justify-between">
+                            <span>Neighborhood: Thrill Island / Chill Island</span>
+                            <span class="text-blue-300 font-semibold">Pools & Waterslides</span>
+                        </div>
+                    </div>
+
+                    <!-- Legend Venue: Specialty Supper Club -->
+                    <div class="venue-card glass-card p-5 rounded-2xl border border-blue-500/30 bg-slate-900/80 flex flex-col justify-between" data-category="dining nightlife" data-ship="opt1">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] bg-blue-900 text-amber-300 font-bold px-2 py-0.5 rounded uppercase">Legend of the Seas</span>
+                                <i class="fa-solid fa-martini-glass text-amber-400"></i>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-1">Hollywoodland Supper Club & Lou's</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                High-end multi-course fine dining paired with live jazz in Central Park, alongside Izumi Sushi/Hibachi and Chops Grille steakhouse.
+                            </p>
+                        </div>
+                        <div class="text-[11px] text-slate-400 border-t border-slate-800 pt-2 flex justify-between">
+                            <span>Neighborhood: Central Park</span>
+                            <span class="text-amber-400 font-semibold">Specialty Dining</span>
+                        </div>
+                    </div>
+
+                    <!-- Adventure Venue: Royal Promenade -->
+                    <div class="venue-card glass-card p-5 rounded-2xl border border-slate-700 bg-slate-900/80 flex flex-col justify-between" data-category="nightlife dining" data-ship="opt2">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] bg-slate-800 text-slate-300 font-bold px-2 py-0.5 rounded uppercase">Adventure of the Seas</span>
+                                <i class="fa-solid fa-store text-slate-400"></i>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-1">Royal Promenade & Duck & Dog Pub</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                The heart of the ship featuring 24/7 Café Promenade, draft beers at the English pub, street parties, and Latin salsa bands at Boleros.
+                            </p>
+                        </div>
+                        <div class="text-[11px] text-slate-400 border-t border-slate-800 pt-2 flex justify-between">
+                            <span>Centerpiece: Promenade Deck</span>
+                            <span class="text-emerald-400 font-semibold">Bars & Nightlife</span>
+                        </div>
+                    </div>
+
+                    <!-- Adventure Venue: Studio B Ice Rink -->
+                    <div class="venue-card glass-card p-5 rounded-2xl border border-slate-700 bg-slate-900/80 flex flex-col justify-between" data-category="nightlife thrills" data-ship="opt2">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] bg-slate-800 text-slate-300 font-bold px-2 py-0.5 rounded uppercase">Adventure of the Seas</span>
+                                <i class="fa-solid fa-icicles text-slate-400"></i>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-1">Studio B Ice Arena</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                Professional ice-skating spectacles featuring world-class skaters, transformable into open ice skating sessions for guests during sea days.
+                            </p>
+                        </div>
+                        <div class="text-[11px] text-slate-400 border-t border-slate-800 pt-2 flex justify-between">
+                            <span>Venue: Studio B</span>
+                            <span class="text-blue-300 font-semibold">Complimentary Shows</span>
+                        </div>
+                    </div>
+
+                    <!-- Adventure Venue: Classic Specialty Dining -->
+                    <div class="venue-card glass-card p-5 rounded-2xl border border-slate-700 bg-slate-900/80 flex flex-col justify-between" data-category="dining" data-ship="opt2">
+                        <div>
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-[10px] bg-slate-800 text-slate-300 font-bold px-2 py-0.5 rounded uppercase">Adventure of the Seas</span>
+                                <i class="fa-solid fa-utensils text-slate-400"></i>
+                            </div>
+                            <h4 class="font-bold text-white text-lg mb-1">Chops Grille & Giovanni's Table</h4>
+                            <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                                Prime American steaks and lobster at Chops Grille, alongside authentic Italian veal osso buco and tiramisu at Giovanni's Table.
+                            </p>
+                        </div>
+                        <div class="text-[11px] text-slate-400 border-t border-slate-800 pt-2 flex justify-between">
+                            <span>Dining: Specialty Restaurants</span>
+                            <span class="text-amber-400 font-semibold">Prime Dining</span>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 5: AIRFARE ELEVATION -->
+        <div id="content-airfare" class="hidden space-y-8">
+            <section class="glass-panel rounded-2xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl">
+                <div class="flex items-center gap-3 border-b border-slate-700/80 pb-4 mb-6">
+                    <span class="w-9 h-9 rounded-xl bg-blue-600 text-amber-300 flex items-center justify-center font-bold text-base shadow-md">
+                        <i class="fa-solid fa-plane"></i>
+                    </span>
+                    <div>
+                        <h3 class="heading-serif text-xl sm:text-2xl font-bold text-white">Airfare Elevation — Main Cabin vs. Comfort+</h3>
+                        <p class="text-xs sm:text-sm text-slate-400">Round-trip Delta flight upgrades arriving 1 day prior in Fort Lauderdale</p>
+                    </div>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Main Cabin Card -->
+                    <div class="glass-card p-6 rounded-2xl border border-slate-700 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <span class="text-xs bg-slate-800 text-slate-300 font-bold px-2.5 py-1 rounded-full uppercase">Standard Service</span>
+                                    <h4 class="font-bold text-white text-xl mt-2">Delta Main Cabin</h4>
+                                    <p class="text-amber-400 font-extrabold text-lg mt-1">$274.00 <span class="text-xs text-slate-400 font-normal">/ person round-trip</span></p>
+                                </div>
+                                <i class="fa-solid fa-plane text-2xl text-slate-500"></i>
+                            </div>
+                            <ul class="space-y-3 text-xs sm:text-sm text-slate-300">
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-slate-400"></i> <span>31–32 inches legroom seat pitch</span></li>
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-slate-400"></i> <span>Standard Main Group Boarding</span></li>
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-slate-400"></i> <span>Shared overhead bin storage</span></li>
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-check text-slate-400"></i> <span>Complimentary non-alcoholic beverages & snacks</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Comfort+ Card -->
+                    <div class="glass-card p-6 rounded-2xl border border-amber-500/50 bg-amber-500/5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold px-2.5 py-1 rounded-full uppercase">Recommended Upgrade</span>
+                                    <h4 class="font-bold text-white text-xl mt-2">Delta Comfort+</h4>
+                                    <p class="text-amber-300 font-extrabold text-lg mt-1">$314.00 <span class="text-xs text-slate-400 font-normal">/ person (+$40 each way)</span></p>
+                                </div>
+                                <i class="fa-solid fa-plane-up text-2xl text-amber-400"></i>
+                            </div>
+                            <ul class="space-y-3 text-xs sm:text-sm text-slate-200">
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-circle-check text-amber-400"></i> <span><strong>Up to 34 inches pitch</strong> (+3 inches stretch space)</span></li>
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-circle-check text-amber-400"></i> <span><strong>Early Boarding Access</strong> to settle in quickly</span></li>
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-circle-check text-amber-400"></i> <span><strong>Dedicated Overhead Storage</strong> for carry-ons</span></li>
+                                <li class="flex items-center gap-2.5"><i class="fa-solid fa-circle-check text-amber-400"></i> <span><strong>Complimentary Beer, Wine & Spirits</strong> in flight</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 rounded-xl bg-blue-950/60 border border-blue-500/30 text-xs sm:text-sm text-slate-300 flex items-center gap-3">
+                    <i class="fa-solid fa-clock-rotate-left text-amber-400 text-xl flex-shrink-0"></i>
+                    <span><strong>Pre-Cruise Protection:</strong> Both flight options arrive in Fort Lauderdale 1 day prior to sailing (Apr 2 for Legend, Apr 9 for Adventure) to safeguard against airline delays.</span>
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 6: DECK PLANS & LAYOUTS EXPLORER -->
+        <div id="content-deckplans" class="hidden space-y-8">
+            <section class="glass-panel rounded-2xl p-6 sm:p-8 border border-slate-700/80 shadow-2xl">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-700/80 pb-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <span class="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-base shadow-md">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </span>
+                        <div>
+                            <h3 class="heading-serif text-xl sm:text-2xl font-bold text-white">Interactive Ship Deck Plans & Blueprint Explorer</h3>
+                            <p class="text-xs sm:text-sm text-slate-400">Inspect deck layouts, public venue locations, stateroom decks, and architectural details</p>
+                        </div>
+                    </div>
+
+                    <!-- Actions & Ship Selector -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <!-- Ship Selection Toggle -->
+                        <div class="flex bg-slate-900 p-1 rounded-xl border border-slate-700 text-xs font-semibold">
+                            <button onclick="setDeckShip('opt1')" id="deck-btn-opt1" class="px-3.5 py-1.5 rounded-lg bg-blue-600 text-white shadow-sm transition">Legend (Icon Class)</button>
+                            <button onclick="setDeckShip('opt2')" id="deck-btn-opt2" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition">Adventure (Voyager Class)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Deck Category Filters -->
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-6 bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-filter text-amber-400"></i> Filter Decks by Zone:
+                    </span>
+                    <div class="flex flex-wrap gap-1.5 text-xs font-semibold">
+                        <button onclick="filterDeckButtons('all')" id="dfilter-all" class="dfilter-btn px-3 py-1 rounded-lg bg-blue-600 text-white">All Decks</button>
+                        <button onclick="filterDeckButtons('public')" id="dfilter-public" class="dfilter-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white">Public & Dining</button>
+                        <button onclick="filterDeckButtons('thrills')" id="dfilter-thrills" class="dfilter-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white">Pools & Thrills</button>
+                        <button onclick="filterDeckButtons('cabins')" id="dfilter-cabins" class="dfilter-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white">Staterooms & Suites</button>
+                    </div>
+                </div>
+
+                <!-- Deck Selector Grid -->
+                <div class="mb-6">
+                    <div class="text-xs font-semibold text-slate-400 mb-2">Select a deck level to view venue highlights & blueprint details:</div>
+                    <div id="deck-buttons-grid" class="flex flex-wrap gap-2">
+                        <!-- Dynamic Deck Buttons loaded via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Active Deck Inspector Card -->
+                <div id="deck-inspector-card" class="bg-gradient-to-br from-slate-900 via-slate-950 to-blue-950 p-6 rounded-2xl border border-blue-500/30 shadow-xl space-y-6">
+                    <!-- Loaded dynamically via JavaScript -->
+                </div>
+            </section>
+        </div>
+
+        <!-- PANEL 6: FINAL DECISION SUMMARY (Always Visible on Web & Print) -->
+        <section class="glass-panel rounded-2xl p-6 sm:p-8 border border-slate-700/80 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-950 shadow-2xl print-border">
+            <div class="flex items-center gap-3 border-b border-slate-700/80 pb-4 mb-6">
+                <span class="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-base shadow-md">6</span>
+                <h3 class="heading-serif text-xl sm:text-2xl font-bold text-white">Final Decision Summary</h3>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 text-xs sm:text-sm mb-6">
+                <!-- Option 1 Recommendation -->
+                <div class="glass-card p-5 rounded-2xl border border-blue-500/30">
+                    <h4 class="font-bold text-amber-300 text-base mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-amber-400"></i> Select Option 1 (Legend of the Seas) if:
+                    </h4>
+                    <p class="text-slate-300 leading-relaxed">
+                        You want to experience Royal Caribbean's flagship mega-ship hardware, multi-neighborhood layout, 28+ dining spots, and a private island day at Perfect Day at CocoCay, structured via a payment of <strong class="text-amber-300">$338.62/month per couple ($169.31/person per month) over 12 months</strong>.
+                    </p>
+                </div>
+
+                <!-- Option 2 Recommendation -->
+                <div class="glass-card p-5 rounded-2xl border border-emerald-500/30">
+                    <h4 class="font-bold text-emerald-400 text-base mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-piggy-bank text-emerald-400"></i> Select Option 2 (Adventure of the Seas) if:
+                    </h4>
+                    <p class="text-slate-300 leading-relaxed">
+                        You want maximum financial efficiency—saving <strong class="text-emerald-400">$1,763.34 per couple ($881.67/person)</strong>—with a payment of <strong class="text-emerald-300">$383.35/month per couple ($191.68/person per month) over 6 months</strong>, a classic cruise layout, and extra savings to allocate toward drink packages and shore excursions.
+                    </p>
+                </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-200 flex items-center gap-3">
+                <i class="fa-solid fa-plane-up text-amber-400 text-xl flex-shrink-0"></i>
+                <span><strong>Flight Recommendation:</strong> Delta Comfort+ ($628.00 per couple) is recommended for both itineraries to secure priority boarding, dedicated overhead bin space, extra legroom, and complimentary in-flight beverages for just $40/person each way.</span>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="no-print mt-12 bg-slate-950 border-t border-slate-800 text-slate-500 py-8 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="text-slate-400 font-medium">© Southern Caribbean Cruise Vacation Planning Guide • Prepared for Couple Getaways</p>
+            <p>Prices, financing plans, and flight rates subject to real-time inventory availability at time of booking.</p>
+        </div>
+    </footer>
+
+    <!-- QUIZ MODAL WIZARD -->
+    <div id="quiz-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="glass-panel w-full max-w-lg rounded-2xl border border-slate-700 p-6 shadow-2xl relative space-y-4">
+            <button onclick="closeQuizModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-lg">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div>
+                    <h3 class="heading-serif text-lg font-bold text-white">Find Your Ideal Cruise Match</h3>
+                    <p class="text-xs text-slate-400">Answer 2 quick preferences to find your match</p>
+                </div>
+            </div>
+
+            <!-- Question 1 -->
+            <div class="space-y-2 text-xs">
+                <label class="font-bold text-amber-300 block">1. What type of ship scale do you prefer?</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="quizAnswer(1, 'icon')" id="q1-icon" class="quiz-q1 p-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-amber-400 text-left">Next-Gen Mega-Ship (Icon Class)</button>
+                    <button onclick="quizAnswer(1, 'voyager')" id="q1-voyager" class="quiz-q1 p-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-amber-400 text-left">Classic Promenade Ship (Voyager Class)</button>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="space-y-2 text-xs">
+                <label class="font-bold text-amber-300 block">2. What is your primary vacation priority?</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="quizAnswer(2, 'icon')" id="q2-icon" class="quiz-q2 p-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-amber-400 text-left">28+ Dining Spots & CocoCay Island</button>
+                    <button onclick="quizAnswer(2, 'voyager')" id="q2-voyager" class="quiz-q2 p-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-amber-400 text-left">Maximum Budget Savings & Historic Nassau</button>
+                </div>
+            </div>
+
+            <!-- Result Box -->
+            <div id="quiz-result" class="hidden p-4 rounded-xl bg-blue-950/80 border border-amber-500/40 text-center space-y-2">
+                <span class="text-xs text-amber-400 font-bold uppercase tracking-wider block">Your Best Match Recommendation</span>
+                <h4 id="quiz-result-title" class="text-lg font-extrabold text-white">Option 1: Legend of the Seas</h4>
+                <p id="quiz-result-desc" class="text-xs text-slate-300 leading-relaxed"></p>
+                <button onclick="closeQuizModal(); switchTab('dashboard');" class="mt-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg">View Matched Package</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-amber-500 text-slate-950 font-bold text-xs px-4 py-3 rounded-xl shadow-2xl transition-all opacity-0 pointer-events-none translate-y-4 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-base"></i>
+        <span id="toast-text">Quote summary copied to clipboard!</span>
+    </div>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // State variables
+        let state = {
+            activeTab: 'dashboard',
+            travelers: 2,
+            flightClass: 'comfort', // 'main' or 'comfort'
+            termMonths: 12,
+            addonBeverage: false,
+            addonWifi: false,
+            itineraryShip: 'opt1', // 'opt1' or 'opt2'
+            itineraryDay: 1,
+            deckShip: 'opt1', // 'opt1' or 'opt2'
+            selectedDeck: 5,
+            activeZoneTab: 'all', // 'all', 'fwd', 'mid', 'aft'
+            deckCategoryFilter: 'all',
+            quizAnswers: { q1: null, q2: null }
+        };
+
+        // Navigation Tab Switcher
+        function switchTab(tabId) {
+            state.activeTab = tabId;
+            const tabs = ['dashboard', 'calculator', 'itinerary', 'ships', 'airfare', 'deckplans'];
+            
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                const content = document.getElementById(`content-${t}`);
+                
+                if (btn) {
+                    if (t === tabId) {
+                        btn.classList.add('active');
+                        btn.classList.remove('bg-slate-800', 'text-slate-300');
+                    } else {
+                        btn.classList.remove('active');
+                        btn.classList.add('bg-slate-800', 'text-slate-300');
+                    }
+                }
+                
+                if (content) {
+                    if (t === tabId) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                }
+            });
+
+            // Smooth scroll to top of content
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Complete Royal Caribbean Deck Plan Database with Spatial Zone Intelligence
+        const DECK_PLANS_DATA = {
+            opt1: {
+                shipName: 'Legend of the Seas',
+                class: 'Icon Class Flagship',
+                grossTons: '248,663 Gross Tons',
+                totalDecks: 20,
+                baseUrl: 'https://www.royalcaribbean.com/cruise-ships/legend-of-the-seas/deck-plans?profile=2401&deck=',
+                decks: {
+                    3: { name: 'Deck 3: Gangway & Medical Center', zone: 'public', desc: 'Lower deck housing primary tender/pier embarkation gangways and the medical center.', venues: ['Main Gangway & Tender Station', 'Medical Center', 'Service Hub'], cabins: 'Crew Quarters & Administrative Services', stateroomTags: ['Crew Quarters', 'Administrative'], noise: 'Low (Quiet Service Zone)', noiseLevel: 'quiet', fwd: 'Medical Center & Health Services', mid: 'Primary Embarkation Gangway & Tender Lobby', aft: 'Crew Accommodation & Technical Control' },
+                    4: { name: 'Deck 4: Entertainment & Dining Level 1', zone: 'public', desc: 'Lower level of the Grand Main Dining Room, Royal Casino Royale, and Royal Theater.', venues: ['Main Dining Room (Level 1)', 'Casino Royale', 'Music Hall', 'Royal Theater'], cabins: 'Ocean View & Interior Staterooms', stateroomTags: ['Ocean View', 'Interior Staterooms'], noise: 'Lively (Nightlife & Dining Traffic)', noiseLevel: 'active', fwd: 'Royal Theater Lower Entrance & Ocean View Cabins', mid: 'Casino Royale, Baccarat & Music Hall', aft: 'Grand Main Dining Room Level 1' },
+                    5: { name: 'Deck 5: Royal Promenade Main Boulevard', zone: 'public', desc: 'The bustling heart of the ship featuring The Pearl landmark, Pearl Café, 24/7 pizza, and specialty bars.', venues: ['The Pearl Landmark', 'Pearl Café', 'Sorrento\'s Pizza', 'Main Dining Room (Level 2)', 'Bionic Bar', 'Starbucks', 'Excursions Desk'], cabins: 'No Passenger Cabins (Pure Venue Deck)', stateroomTags: ['Public Venue Deck'], noise: 'High Activity (Central Hub)', noiseLevel: 'high', fwd: 'The Pearl Landmark & Pearl Café', mid: 'Royal Promenade Shops, Sorrento\'s & Bionic Bar', aft: 'Main Dining Room Level 2 Upper Balcony' },
+                    6: { name: 'Deck 6: Royal Promenade Mezzanine', zone: 'public', desc: 'Upper Promenade featuring ice skating arena, sports bar, and kids clubs.', venues: ['Absolute Zero Arena (Ice Rink)', 'Playmakers Sports Bar', 'Schooner Bar', 'Adventure Ocean Youth Center', 'Social020 Teen Club'], cabins: 'Select Forward Ocean View Cabins', stateroomTags: ['Forward Ocean View'], noise: 'Moderate Transit', noiseLevel: 'moderate', fwd: 'Ocean View Cabins & Absolute Zero Ice Arena', mid: 'Schooner Piano Bar & Playmakers Sports Bar', aft: 'Adventure Ocean Youth & Teen Clubs' },
+                    7: { name: 'Deck 7: Surfside Family Neighborhood', zone: 'public cabins', desc: 'Dedicated family neighborhood with kids splash zones, carousel, and casual dining.', venues: ['Surfside Carousel', 'Splashaway Bay', 'Playscape', 'Surfside Eatery', 'Lemon Post Bar'], cabins: 'Surfside Family Suites & Balcony Staterooms', stateroomTags: ['Surfside Family Suites', 'Family Balconies'], noise: 'Family Active Zone', noiseLevel: 'active', fwd: 'Quiet Ocean View & Interior Cabins', mid: 'Surfside Family Suites & Connecting Staterooms', aft: 'Surfside Carousel, Playscape & Splash Pool' },
+                    8: { name: 'Deck 8: Central Park Neighborhood', zone: 'public cabins', desc: 'Open-air lush green park surrounded by fine dining, live jazz, and high-end shopping.', venues: ['Central Park Open-Air Garden', 'Chops Grille Steakhouse', 'Izumi Hibachi & Sushi', 'Hollywoodland Supper Club', 'Lou\'s Jazz \'n Blues', 'Trellis Bar'], cabins: 'Central Park View Balconies & Suites', stateroomTags: ['Park View Balconies', 'Central Park Suites'], noise: 'Pleasant Ambiance (Acoustic Jazz)', noiseLevel: 'moderate', fwd: 'Izumi Hibachi & Hollywoodland Supper Club', mid: 'Open-Air Central Park Garden & Lou\'s Jazz Bar', aft: 'Chops Grille & Trellis Garden Bar' },
+                    9: { name: 'Deck 9: Guest Staterooms (Mid Deck)', zone: 'cabins', desc: 'Quiet residential deck offering a full selection of balcony and interior accommodation.', venues: ['Elevator Lobbies & Digital Wayfinders'], cabins: 'Infinite Balconies, Ocean View, & Interior Cabins', stateroomTags: ['Infinite Ocean Balconies', 'Ocean View', 'Interiors'], noise: 'Quiet Residential Deck', noiseLevel: 'quiet', fwd: 'Forward Ocean View & Spacious Balconies', mid: 'Central Atrium Infinite Balconies & Elevators', aft: 'Aft View Balconies & Quiet Interior Rooms' },
+                    10: { name: 'Deck 10: Guest Staterooms (Mid Deck)', zone: 'cabins', desc: 'Residential accommodation deck located close to central ship elevators.', venues: ['Elevator Lobbies'], cabins: 'Spacious Ocean View & Connecting Family Rooms', stateroomTags: ['Connecting Family Cabins', 'Ocean View Balconies'], noise: 'Quiet Residential Deck', noiseLevel: 'quiet', fwd: 'Forward Bridge Overlook Cabins', mid: 'Main Elevator Lobby & Family Connecting Rooms', aft: 'Aft Corner View Balcony Cabins' },
+                    11: { name: 'Deck 11: Guest Staterooms & Suites', zone: 'cabins', desc: 'Residential deck situated directly below upper bridge decks.', venues: ['Elevator Lobbies'], cabins: 'Sunset Corner Suites, Infinite Balconies', stateroomTags: ['Sunset Corner Suites', 'Infinite Balconies'], noise: 'Quiet Residential Deck', noiseLevel: 'quiet', fwd: 'Forward Infinite Balcony Rooms', mid: 'Central Elevator Hub & Premium Balconies', aft: 'Sunset Corner Suites with Wrap-Around Balconies' },
+                    12: { name: 'Deck 12: Upper Guest Deck & Overlook', zone: 'cabins', desc: 'High-elevation staterooms offering expansive ocean vistas.', venues: ['Bridge View Overlooks'], cabins: 'Grand Suites, Ocean View Balconies, Interior Cabins', stateroomTags: ['Grand Suites', 'Ocean Balconies', 'Interiors'], noise: 'Quiet Residential Deck', noiseLevel: 'quiet', fwd: 'Forward Grand Suites & Captain\'s Outlook', mid: 'Mid-Ship Ocean View Balconies', aft: 'Aft Wake View Balcony Staterooms' },
+                    14: { name: 'Deck 14: Navigation Bridge & Coastal Kitchen', zone: 'public cabins', desc: 'Ship navigation bridge alongside suite dining and staterooms.', venues: ['Bridge Command Center', 'Coastal Kitchen (Suite Dining)'], cabins: 'Junior Suites & Deluxe Balconies', stateroomTags: ['Junior Suites', 'Deluxe Balconies'], noise: 'Moderate (Near Upper Lido)', noiseLevel: 'moderate', fwd: 'Ship Navigation Bridge & Officers\' Quarters', mid: 'Junior Suites & Coastal Kitchen Dining Entrance', aft: 'Deluxe Balcony Staterooms & Elevators' },
+                    15: { name: 'Deck 15: Chill Island & Windjammer', zone: 'thrills public', desc: 'Main resort pool deck with swim-up bar, massive buffet, and infinity Cove Pool.', venues: ['Swim & Tonic (Swim-Up Bar)', 'Royal Bay Main Pool', 'The Cove Infinity Pool', 'Windjammer Marketplace Buffet', 'El Loco Fresh'], cabins: 'No Passenger Cabins (Pool Deck)', stateroomTags: ['Pool & Dining Deck'], noise: 'High Activity (Lido & Pools)', noiseLevel: 'high', fwd: 'The Cove Infinity Pool & Solarium Area', mid: 'Royal Bay Main Pool & Swim & Tonic Swim-Up Bar', aft: 'Windjammer Marketplace Buffet & El Loco Fresh' },
+                    16: { name: 'Deck 16: Thrill Island & Category 6', zone: 'thrills', desc: 'Record-breaking waterpark with 6 slides, Crown\'s Edge ropes course, and mini golf.', venues: ['Category 6 Waterpark', 'Frightening Bolt Slide', 'Pressure Drop Drop-Slide', 'Crown\'s Edge Skywalk', 'Lost Dunes Mini Golf'], cabins: 'No Passenger Cabins (Waterpark Deck)', stateroomTags: ['Sports & Thrills Deck'], noise: 'High Energy (Waterpark)', noiseLevel: 'high', fwd: 'Category 6 Waterslide Towers & Frightening Bolt', mid: 'Crown\'s Edge Ropes Skywalk', aft: 'Lost Dunes Mini-Golf & Sports Deck' },
+                    17: { name: 'Deck 17: AquaDome & Overlook Pods', zone: 'public thrills', desc: 'Enclosed glass dome featuring water shows, food hall, and ocean outlook pods.', venues: ['The AquaDome Theater', 'AquaDome Market Food Hall', 'Rye & Bean Coffee Bar', 'Overlook Pods'], cabins: 'Owner\'s Suites & Icon Loft Suites', stateroomTags: ['Owner\'s Suites', 'Icon Loft Two-Story Suites'], noise: 'Lively Evening Shows', noiseLevel: 'active', fwd: 'Enclosed AquaDome Theater & Overlook Pods', mid: 'AquaDome Market Food Hall & Rye & Bean Bar', aft: 'Icon Loft Suites & Exclusive Suite Corridors' },
+                    18: { name: 'Deck 18: Suite Neighborhood Sun Deck', zone: 'public cabins', desc: 'Exclusive multi-level enclave for suite guests with private pool and sun deck.', venues: ['The Grove Suite Sun Deck', 'The Grove Pool & Bar', 'Suite Lounge'], cabins: 'Royal Loft Suites & Ultimate Family Townhouse', stateroomTags: ['Royal Loft Suites', 'Ultimate Family Townhouse'], noise: 'Exclusive Low Noise', noiseLevel: 'quiet', fwd: 'The Grove Private Suite Sun Deck & VIP Pool', mid: 'Suite Lounge & Concierge Desk', aft: 'Ultimate Family Townhouse Multi-Level Corridor' },
+                    19: { name: 'Deck 19: Suite Enclave Upper Tier', zone: 'cabins', desc: 'Top tier private sun deck and multi-story suite upper levels.', venues: ['Private VIP Cabanas'], cabins: 'Upper Floor of Two-Story Suites', stateroomTags: ['Upper Suite Mezzanines', 'VIP Cabanas'], noise: 'Quiet Exclusive VIP Enclave', noiseLevel: 'quiet', fwd: 'Private VIP Sun Cabanas & Sky Deck', mid: 'Upper Level of Royal Loft Suites', aft: 'Private Suite Deck Terrace' },
+                    20: { name: 'Deck 20: Sports Deck & Solarium Top', zone: 'thrills', desc: 'Highest accessible point on the ship with sports court and panoramic viewpoints.', venues: ['Sports Court', 'Running Track Upper Loop', 'Panoramic Ocean Lookout'], cabins: 'No Passenger Cabins', stateroomTags: ['Top Sports Deck'], noise: 'Outdoor Active', noiseLevel: 'active', fwd: 'Panoramic Bow Lookout & Upper Running Track', mid: 'Multi-Sport Basketball & Volleyball Court', aft: 'Upper Sun Decks & Observation Point' }
+                }
+            },
+            opt2: {
+                shipName: 'Adventure of the Seas',
+                class: 'Voyager Class Favorite',
+                grossTons: '138,193 Gross Tons',
+                totalDecks: 15,
+                baseUrl: 'https://www.royalcaribbean.com/cruise-ships/adventure-of-the-seas/deck-plans?profile=2383&deck=',
+                decks: {
+                    2: { name: 'Deck 2: Ice Arena Lower & Conference Center', zone: 'public cabins', desc: 'Lower levels housing the ice arena floor and conference rooms.', venues: ['Studio B Ice Rink Ground Level', 'Conference Center', 'Cinema Room'], cabins: 'Ocean View & Solo Studio Interior Cabins', stateroomTags: ['Ocean View', 'Solo Studio Interiors'], noise: 'Quiet Lower Deck', noiseLevel: 'quiet', fwd: 'Studio B Lower Ice Rink & Cinema Room', mid: 'Conference Center Meeting Rooms', aft: 'Quiet Lower Ocean View Cabins' },
+                    3: { name: 'Deck 3: Studio B & Main Dining Level 1', zone: 'public', desc: 'Entertainment hub featuring Studio B ice arena and lower level of Main Dining Room.', venues: ['Studio B Ice Arena Entrance', 'Mozart Main Dining Room', 'Coral Theater (Lower)'], cabins: 'Ocean View & Interior Staterooms', stateroomTags: ['Ocean View', 'Interior Staterooms'], noise: 'Moderate Event Traffic', noiseLevel: 'moderate', fwd: 'Coral Theater Entrance & Forward Cabins', mid: 'Studio B Ice Arena Main Entrance', aft: 'Mozart Main Dining Room Level 1' },
+                    4: { name: 'Deck 4: Casino Royale & Schooner Bar', zone: 'public', desc: 'Classic nightlife deck featuring casino, Schooner Bar, and Latin dancing.', venues: ['Strauss Main Dining Room', 'Casino Royale', 'Schooner Bar', 'Boleros Latin Lounge', 'Imperial Lounge'], cabins: 'Ocean View Staterooms Forward', stateroomTags: ['Forward Ocean View'], noise: 'Lively Nightlife Hub', noiseLevel: 'high', fwd: 'Imperial Lounge & Forward Staterooms', mid: 'Casino Royale, Schooner Bar & Boleros Lounge', aft: 'Strauss Main Dining Room Level 2' },
+                    5: { name: 'Deck 5: Royal Promenade Central Boulevard', zone: 'public', desc: 'Indoor street boulevard lined with cafes, English pub, and duty-free shops.', venues: ['Vivaldi Main Dining Room', 'Royal Promenade', 'Café Promenade', 'Duck & Dog Pub', 'Guest Services', 'Shore Excursions Desk'], cabins: 'Promenade View Interior Cabins', stateroomTags: ['Promenade View Interior Cabins'], noise: 'High Activity (Boulevard)', noiseLevel: 'high', fwd: 'Guest Services & Shore Excursions Desks', mid: 'Royal Promenade Shops, Duck & Dog Pub, Café Promenade', aft: 'Vivaldi Main Dining Room Level 3' },
+                    6: { name: 'Deck 6: Guest Staterooms (Mid Ship)', zone: 'cabins', desc: 'Quiet residential deck offering easy access to Promenade below.', venues: ['Elevator Lobbies'], cabins: 'Royal Promenade View Cabins, Balcony, & Interior Rooms', stateroomTags: ['Promenade View Cabins', 'Ocean Balconies', 'Interiors'], noise: 'Quiet Residential Deck', noiseLevel: 'quiet', fwd: 'Forward Ocean View & Balcony Staterooms', mid: 'Promenade Overlook Cabins & Main Elevators', aft: 'Aft Balcony Rooms with Ocean Views' },
+                    7: { name: 'Deck 7: Guest Staterooms', zone: 'cabins', desc: 'Mid-ship accommodation deck with balanced access to upper and lower venues.', venues: ['Elevator Lobbies'], cabins: 'Ocean View Balcony Staterooms & Spacious Interiors', stateroomTags: ['Spacious Ocean Balconies', 'Interiors'], noise: 'Quiet Residential Deck', noiseLevel: 'quiet', fwd: 'Forward Balcony Staterooms', mid: 'Central Elevator Hub & Interior Staterooms', aft: 'Aft View Balconies & Connecting Rooms' },
+                    8: { name: 'Deck 8: Guest Staterooms', zone: 'cabins', desc: 'Residential stateroom deck.', venues: ['Elevator Lobbies'], cabins: 'Spacious Ocean View Balconies & Interior Rooms', stateroomTags: ['Ocean Balconies', 'Spacious Interiors'], noise: 'Quiet Residential Deck', noiseLevel: 'quiet', fwd: 'Forward Quiet Balcony Corridor', mid: 'Main Elevator Lobby & Deluxe Balconies', aft: 'Aft Staterooms with Stern Views' },
+                    9: { name: 'Deck 9: Guest Staterooms & Family Suites', zone: 'cabins', desc: 'Upper residential deck with larger family accommodations.', venues: ['Elevator Lobbies'], cabins: 'Junior Suites, Ocean View, & Interior Staterooms', stateroomTags: ['Junior Suites', 'Ocean View', 'Interiors'], noise: 'Quiet Residential Deck', noiseLevel: 'quiet', fwd: 'Forward Junior Suites', mid: 'Mid-Ship Balconies & Family Staterooms', aft: 'Quiet Aft Balcony Staterooms' },
+                    10: { name: 'Deck 10: Suite Level Deck', zone: 'cabins', desc: 'Premium stateroom deck positioned directly below pool and dining decks.', venues: ['Concierge Lounge'], cabins: 'Grand Suites, Owner\'s Suites, Royal Suite', stateroomTags: ['Royal Suite', 'Owner\'s Suites', 'Grand Suites'], noise: 'Quiet Premium Corridor', noiseLevel: 'quiet', fwd: 'Owner\'s Suites & Grand Suites Corridor', mid: 'Royal Suite & Concierge Lounge Entrance', aft: 'Junior Suites & Aft View Balconies' },
+                    11: { name: 'Deck 11: Lido Pool Deck & Windjammer', zone: 'thrills public', desc: 'Main open-air pool deck, adults-only Solarium, and Windjammer Marketplace buffet.', venues: ['Main Pool & Hot Tubs', 'Adults-Only Solarium Pool', 'Windjammer Marketplace', 'Outdoor Movie Screen', 'Pool Bar'], cabins: 'No Passenger Cabins (Pool Deck)', stateroomTags: ['Pool & Buffet Deck'], noise: 'High Activity (Pool & Lido)', noiseLevel: 'high', fwd: 'Adults-Only Solarium Pool & Whirlpools', mid: 'Main Swimming Pool & Pool Bar', aft: 'Windjammer Marketplace Buffet' },
+                    12: { name: 'Deck 12: Spa, Fitness & Splashaway Bay', zone: 'thrills public', desc: 'Upper deck with spa, kids waterpark, and jogging track.', venues: ['Vitality Spa & Fitness Center', 'Splashaway Bay Water Park', 'Vitality Café', 'Royal Babies & Tots Nursery'], cabins: 'Spa Ocean View Staterooms Forward', stateroomTags: ['Spa Ocean View Cabins'], noise: 'Moderate Active Zone', noiseLevel: 'moderate', fwd: 'Vitality Spa & Fitness Center Gym', mid: 'Jogging Track & Splashaway Bay Water Park', aft: 'Nursery & Outdoor Sun Lounge' },
+                    13: { name: 'Deck 13: Sports Deck & FlowRider', zone: 'thrills', desc: 'High-energy outdoor sports deck with FlowRider surf simulator and waterslides.', venues: ['FlowRider Surf Simulator', 'The Perfect Storm Waterslides (Cyclone & Typhoon)', 'Rock Climbing Wall', 'Mini-Golf Course', 'Sports Court'], cabins: 'No Passenger Cabins (Sports Deck)', stateroomTags: ['Active Sports Deck'], noise: 'High Energy Sports', noiseLevel: 'high', fwd: 'Rock Climbing Wall Entrance', mid: 'The Perfect Storm Waterslides & Mini Golf', aft: 'FlowRider Surf Simulator & Sports Court' },
+                    14: { name: 'Deck 14: Suite Lounge & Viking Crown', zone: 'public', desc: 'Panoramic lounge crowning the ship with 360-degree ocean views.', venues: ['Viking Crown Lounge', 'Suite Lounge', 'Diamond Club Lounge', 'High Notes Jazz Club'], cabins: 'No Passenger Cabins (Lounge Deck)', stateroomTags: ['Panoramic Lounges'], noise: 'Lively Evening Lounge', noiseLevel: 'moderate', fwd: 'Viking Crown Panoramic Observation Lounge', mid: 'Suite Lounge & Diamond Club', aft: 'High Notes Live Jazz Club' },
+                    15: { name: 'Deck 15: Skylight Chapel', zone: 'public', desc: 'Highest point on board housing the wedding and skylight chapel.', venues: ['Skylight Wedding Chapel', 'Lookout Balcony'], cabins: 'No Passenger Cabins', stateroomTags: ['Skylight Chapel'], noise: 'Quiet Scenic Outlook', noiseLevel: 'quiet', fwd: 'Skylight Wedding Chapel & Highest Deck Viewpoint', mid: 'Top Ship Balcony Outlook', aft: 'Observatory Overlook' }
+                }
+            }
+        };
+
+        const ITINERARY_DATA = {
+            opt1: {
+                title: 'Option 1 Sailing Route (Legend of the Seas):',
+                route: 'Fort Lauderdale ➔ Oranjestad (Aruba) ➔ Willemstad (Curaçao) ➔ Cabo Rojo (Dominican Republic) ➔ Perfect Day at CocoCay ➔ Fort Lauderdale',
+                days: {
+                    1: { title: 'Day 1: Embarkation at Port Everglades', location: 'Port Everglades (Fort Lauderdale, FL)', time: 'Departs 4:00 PM', desc: 'Board Legend of the Seas at Port Everglades. Settle into your stateroom, explore Icon Class neighborhood features, grab welcome drinks at Swim & Tonic, and enjoy evening entertainment.', icon: 'fa-ship' },
+                    2: { title: 'Day 2: Cruising at Sea', location: 'At Sea (Atlantic Ocean)', time: 'All Day', desc: 'Relax on the Lido Deck, splash at Category 6 waterpark, enjoy live acoustic music in Central Park, or relax at The Hideaway suspended infinity pool.', icon: 'fa-water' },
+                    3: { title: 'Day 3: Cruising at Sea', location: 'At Sea (Caribbean Sea)', time: 'All Day', desc: 'Pamper yourself at the spa, try dining stalls at AquaDome Market, enjoy cocktails with panoramic ocean views, and watch high-diving acrobatic water shows in the AquaDome.', icon: 'fa-umbrella-beach' },
+                    4: { title: 'Day 4: Oranjestad, Aruba', location: 'Oranjestad, Aruba', time: '8:00 AM – 11:00 PM', desc: 'Dock in Aruba for an extended stay. Visit Eagle Beach or Palm Beach, explore Arikok National Park on 4x4 safaris, or ride the downtown trolley loop. Enjoy vibrant nightlife before a late-night departure.', icon: 'fa-sun' },
+                    5: { title: 'Day 5: Willemstad, Curaçao', location: 'Willemstad, Curaçao', time: '7:00 AM – 3:00 PM', desc: 'Walk across the Queen Emma Pontoon Bridge in historic Willemstad, photograph iconic pastel Handelskade storefronts, and visit the historic Blue Curaçao distillery.', icon: 'fa-city' },
+                    6: { title: 'Day 6: Cabo Rojo, Dominican Republic', location: 'Cabo Rojo, Dominican Republic', time: '12:00 PM – 7:00 PM', desc: 'Discover pristine eco-beaches and natural turquoise coastal lagoons along the Pedernales coastline. Enjoy beachside amenities and coastal nature preserves.', icon: 'fa-water' },
+                    7: { title: 'Day 7: Cruising at Sea', location: 'At Sea (Heading North)', time: 'All Day', desc: 'Enjoy specialty dining at Hollywoodland Supper Club or Chops Grille, catch live jazz at Lou’s, and relax on your final day at sea.', icon: 'fa-compass' },
+                    8: { title: 'Day 8: Perfect Day at CocoCay', location: 'Perfect Day at CocoCay, Bahamas', time: '8:00 AM – 5:00 PM', desc: 'Royal Caribbean’s premier private island. Plunge down Thrill Waterpark slides, relax at Oasis Lagoon freshwater pool, or reserve a VIP cabana at Coco Beach Club.', icon: 'fa-island-tropical' },
+                    9: { title: 'Day 9: Disembarkation', location: 'Port Everglades (Fort Lauderdale, FL)', time: 'Arrives 6:00 AM', desc: 'Return to Port Everglades. Disembark following breakfast and catch your return flight.', icon: 'fa-plane-departure' }
+                }
+            },
+            opt2: {
+                title: 'Option 2 Sailing Route (Adventure of the Seas):',
+                route: 'Fort Lauderdale ➔ Nassau (Bahamas) ➔ Cabo Rojo (Dominican Republic) ➔ Oranjestad (Aruba) ➔ Willemstad (Curaçao) ➔ Fort Lauderdale',
+                days: {
+                    1: { title: 'Day 1: Embarkation at Port Everglades', location: 'Port Everglades (Fort Lauderdale, FL)', time: 'Departs 4:00 PM', desc: 'Board Adventure of the Seas. Stroll along the Royal Promenade, grab late-night slice at Sorrento\'s, and attend the sail-away party on the pool deck.', icon: 'fa-ship' },
+                    2: { title: 'Day 2: Nassau, Bahamas', location: 'Nassau, Bahamas', time: '7:00 AM – 3:00 PM', desc: 'Explore historic downtown Nassau, visit Atlantis Paradise Island resort, relax at Junkanoo Beach, or shop for local crafts at the Straw Market.', icon: 'fa-umbrella-beach' },
+                    3: { title: 'Day 3: Cruising at Sea', location: 'At Sea (Sailing South)', time: 'All Day', desc: 'Enjoy pool deck games, catch an ice-skating show at Studio B, scale the rock climbing wall, or relax in the adults-only Solarium.', icon: 'fa-water' },
+                    4: { title: 'Day 4: Cabo Rojo, Dominican Republic', location: 'Cabo Rojo, Dominican Republic', time: '7:00 AM – 4:00 PM', desc: 'Visit pristine coastal beaches, go snorkeling along pristine coral reefs, or take guided nature excursions in southern Dominican Republic.', icon: 'fa-water' },
+                    5: { title: 'Day 5: Cruising at Sea', location: 'At Sea (Heading to ABC Islands)', time: 'All Day', desc: 'Test your balance on the FlowRider surf simulator, race down The Perfect Storm waterslides, and enjoy specialty Italian dining at Giovanni\'s Table.', icon: 'fa-compass' },
+                    6: { title: 'Day 6: Oranjestad, Aruba', location: 'Oranjestad, Aruba', time: '8:00 AM – 11:00 PM', desc: 'Full day and late evening in Aruba. Swim in crystal turquoise waters at Eagle Beach, sample local seafood, and enjoy evening casino nightlife.', icon: 'fa-sun' },
+                    7: { title: 'Day 7: Willemstad, Curaçao', location: 'Willemstad, Curaçao', time: '8:00 AM – 6:00 PM', desc: 'Explore vibrant Dutch colonial streets, shop in Punda, cross the pontoon bridge to Otrabanda, and sample Blue Curaçao liqueur.', icon: 'fa-city' },
+                    8: { title: 'Day 8: Cruising at Sea', location: 'At Sea (Heading North)', time: 'All Day', desc: 'Final relaxing day at sea. Enjoy Schooner Bar piano sing-alongs, pub draft beers, and a farewell dinner in the main dining room.', icon: 'fa-glass-cheers' },
+                    9: { title: 'Day 9: Disembarkation', location: 'Port Everglades (Fort Lauderdale, FL)', time: 'Arrives 6:00 AM', desc: 'Arrive back in Fort Lauderdale for morning disembarkation and flights home.', icon: 'fa-plane-departure' }
+                }
+            }
+        };
+
+        function syncGlobalTravelers(val) {
+            const num = parseInt(val, 10);
+            state.travelers = num;
+            const rangeInput = document.getElementById('calc-travelers-range');
+            if (rangeInput) rangeInput.value = num;
+            const matSelect = document.getElementById('matrix-travelers');
+            if (matSelect) matSelect.value = num;
+            updateCalculator();
+        }
+
+        function syncGlobalFlight(val) {
+            state.flightClass = val;
+            const matSelect = document.getElementById('matrix-flight');
+            if (matSelect) matSelect.value = val;
+            setCalcFlight(val);
+        }
+
+        function setCalcFlight(tier) {
+            state.flightClass = tier;
+            const btnMain = document.getElementById('calc-btn-main');
+            const btnComfort = document.getElementById('calc-btn-comfort');
+            if (tier === 'main') {
+                if (btnMain) btnMain.className = 'p-3 rounded-lg border text-left text-xs sm:text-sm transition flex flex-col justify-between border-amber-500/50 bg-amber-500/10 text-amber-300 ring-1 ring-amber-500/30';
+                if (btnComfort) btnComfort.className = 'p-3 rounded-lg border text-left text-xs sm:text-sm transition flex flex-col justify-between border-slate-700 bg-slate-800 text-slate-300';
+            } else {
+                if (btnComfort) btnComfort.className = 'p-3 rounded-lg border text-left text-xs sm:text-sm transition flex flex-col justify-between border-amber-500/50 bg-amber-500/10 text-amber-300 ring-1 ring-amber-500/30';
+                if (btnMain) btnMain.className = 'p-3 rounded-lg border text-left text-xs sm:text-sm transition flex flex-col justify-between border-slate-700 bg-slate-800 text-slate-300';
+            }
+            const matSelect = document.getElementById('matrix-flight');
+            if (matSelect) matSelect.value = tier;
+            updateCalculator();
+        }
+
+        function setCalcTerm(months) {
+            state.termMonths = months;
+            [6, 12, 18, 24].forEach(m => {
+                const btn = document.getElementById(`term-btn-${m}`);
+                if (btn) {
+                    if (m === months) {
+                        btn.className = 'p-2.5 rounded-lg border border-amber-500/50 bg-amber-500/10 text-amber-300 font-bold ring-1 ring-amber-500/30';
+                    } else {
+                        btn.className = 'p-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 font-semibold';
+                    }
+                }
+            });
+            updateCalculator();
+        }
+
+        function updateCalculator() {
+            const rangeInput = document.getElementById('calc-travelers-range');
+            if (rangeInput) {
+                state.travelers = parseInt(rangeInput.value, 10);
+                document.getElementById('calc-travelers-val').innerText = `${state.travelers} Guest${state.travelers > 1 ? 's' : ''}`;
+                document.getElementById('calc-guests-badge').innerText = `${state.travelers} Guest${state.travelers > 1 ? 's' : ''}`;
+            }
+
+            const bev = document.getElementById('calc-addon-beverage');
+            if (bev) state.addonBeverage = bev.checked;
+            
+            const wifi = document.getElementById('calc-addon-wifi');
+            if (wifi) state.addonWifi = wifi.checked;
+
+            // Base Costs for Couple (2 travelers)
+            const opt1BaseStateroomCouple = 4063.44;
+            const opt2BaseStateroomCouple = 2300.10;
+
+            // Per traveler stateroom costs
+            const opt1StateroomPerPerson = opt1BaseStateroomCouple / 2;
+            const opt2StateroomPerPerson = opt2BaseStateroomCouple / 2;
+
+            const opt1TotalStateroom = opt1StateroomPerPerson * state.travelers;
+            const opt2TotalStateroom = opt2StateroomPerPerson * state.travelers;
+
+            // Flight costs
+            const flightPricePP = state.flightClass === 'main' ? 274.00 : 314.00;
+            const totalFlightCost = flightPricePP * state.travelers;
+
+            // Addons cost
+            let addonsCost = 0;
+            if (state.addonBeverage) addonsCost += 600.00 * state.travelers;
+            if (state.addonWifi) addonsCost += 160.00; // flat fee per stateroom
+
+            const totalUpfront = totalFlightCost + addonsCost;
+
+            // Financing applies STRICTLY to Cruise Fare
+            const opt1MonthlyTotal = opt1TotalStateroom / state.termMonths;
+            const opt1MonthlyPP = opt1MonthlyTotal / state.travelers;
+
+            const opt2MonthlyTotal = opt2TotalStateroom / state.termMonths;
+            const opt2MonthlyPP = opt2MonthlyTotal / state.travelers;
+
+            const opt1GrandTotal = opt1TotalStateroom + totalUpfront;
+            const opt2GrandTotal = opt2TotalStateroom + totalUpfront;
+
+            const variance = opt1GrandTotal - opt2GrandTotal;
+
+            const formatCurr = num => '$' + num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            // Update Calculator Card
+            if (document.getElementById('out-opt1-grand')) {
+                document.getElementById('out-opt1-grand').innerText = formatCurr(opt1GrandTotal);
+                document.getElementById('out-opt1-person').innerText = `${formatCurr(opt1GrandTotal / state.travelers)} / person grand total`;
+                document.getElementById('out-opt1-monthly').innerText = `${formatCurr(opt1MonthlyTotal)} / mo`;
+                document.getElementById('out-opt1-monthly-pp').innerText = `(${formatCurr(opt1MonthlyPP)}/mo per person for cruise fare over ${state.termMonths} mos)`;
+                document.getElementById('out-opt1-upfront').innerText = `${formatCurr(totalUpfront)} upfront`;
+
+                document.getElementById('out-opt2-grand').innerText = formatCurr(opt2GrandTotal);
+                document.getElementById('out-opt2-person').innerText = `${formatCurr(opt2GrandTotal / state.travelers)} / person grand total`;
+                document.getElementById('out-opt2-monthly').innerText = `${formatCurr(opt2MonthlyTotal)} / mo`;
+                document.getElementById('out-opt2-monthly-pp').innerText = `(${formatCurr(opt2MonthlyPP)}/mo per person for cruise fare over ${state.termMonths} mos)`;
+                document.getElementById('out-opt2-upfront').innerText = `${formatCurr(totalUpfront)} upfront`;
+
+                document.getElementById('out-variance-text').innerText = `Selecting Option 2 saves ${formatCurr(variance)} total (${formatCurr(variance / state.travelers)} / person)`;
+            }
+
+            // Sync Matrix Table Overview
+            if (document.getElementById('mat-opt1-monthly-total')) {
+                document.getElementById('mat-opt1-monthly-total').innerHTML = `${formatCurr(opt1MonthlyTotal)} / mo <span class="text-xs font-normal text-slate-400">(${state.travelers > 1 ? 'Group' : 'Solo'} total)</span>`;
+                document.getElementById('mat-opt1-monthly-person').innerHTML = `<i class="fa-solid fa-user text-amber-400 mr-1"></i>${formatCurr(opt1MonthlyPP)} / mo per person <span class="font-normal text-slate-400">(${state.termMonths} mos)</span>`;
+                
+                document.getElementById('mat-opt2-monthly-total').innerHTML = `${formatCurr(opt2MonthlyTotal)} / mo <span class="text-xs font-normal text-slate-400">(${state.travelers > 1 ? 'Group' : 'Solo'} total)</span>`;
+                document.getElementById('mat-opt2-monthly-person').innerHTML = `<i class="fa-solid fa-user text-amber-400 mr-1"></i>${formatCurr(opt2MonthlyPP)} / mo per person <span class="font-normal text-slate-400">(${state.termMonths} mos)</span>`;
+
+                document.getElementById('mat-opt1-stateroom').innerHTML = `${formatCurr(opt1TotalStateroom)} <span class="text-xs font-normal text-slate-400">(${formatCurr(opt1StateroomPerPerson)} / person)</span>`;
+                document.getElementById('mat-opt2-stateroom').innerHTML = `${formatCurr(opt2TotalStateroom)} <span class="text-xs font-normal text-slate-400">(${formatCurr(opt2StateroomPerPerson)} / person)</span>`;
+
+                document.getElementById('mat-opt1-grand').innerHTML = `${formatCurr(opt1GrandTotal)} <span class="text-xs font-normal text-slate-300">(${formatCurr(opt1GrandTotal / state.travelers)} / person)</span>`;
+                document.getElementById('mat-opt2-grand').innerHTML = `${formatCurr(opt2GrandTotal)} <span class="text-xs font-normal text-slate-300">(${formatCurr(opt2GrandTotal / state.travelers)} / person)</span>`;
+            }
+        }
+
+        function setItineraryShip(ship) {
+            state.itineraryShip = ship;
+            const btnOpt1 = document.getElementById('itin-btn-opt1');
+            const btnOpt2 = document.getElementById('itin-btn-opt2');
+            if (ship === 'opt1') {
+                if (btnOpt1) btnOpt1.className = 'px-3.5 py-1.5 rounded-lg bg-blue-600 text-white shadow-sm transition';
+                if (btnOpt2) btnOpt2.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition';
+                if (document.getElementById('itin-route-banner')) document.getElementById('itin-route-banner').className = 'p-4 rounded-xl bg-blue-950/50 border border-blue-500/30 text-xs sm:text-sm text-blue-200 mb-6 flex items-center gap-3';
+            } else {
+                if (btnOpt2) btnOpt2.className = 'px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition';
+                if (btnOpt1) btnOpt1.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition';
+                if (document.getElementById('itin-route-banner')) document.getElementById('itin-route-banner').className = 'p-4 rounded-xl bg-emerald-950/50 border border-emerald-500/30 text-xs sm:text-sm text-emerald-200 mb-6 flex items-center gap-3';
+            }
+
+            const shipInfo = ITINERARY_DATA[ship];
+            if (document.getElementById('itin-banner-title')) {
+                document.getElementById('itin-banner-title').innerText = shipInfo.title;
+                document.getElementById('itin-banner-route').innerText = shipInfo.route;
+            }
+
+            setItineraryDay(state.itineraryDay);
+        }
+
+        function setItineraryDay(day) {
+            state.itineraryDay = day;
+            for (let i = 1; i <= 9; i++) {
+                const btn = document.getElementById(`day-btn-${i}`);
+                if (btn) {
+                    if (i === day) {
+                        btn.className = 'day-step-btn py-2.5 rounded-lg bg-amber-500 text-slate-950 shadow-md font-bold';
+                    } else {
+                        btn.className = 'day-step-btn py-2.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 font-bold';
+                    }
+                }
+            }
+
+            const dayData = ITINERARY_DATA[state.itineraryShip].days[day];
+            if (document.getElementById('day-stepper-title')) {
+                document.getElementById('day-stepper-title').innerText = dayData.title;
+                document.getElementById('day-location-badge').innerText = dayData.location;
+                document.getElementById('day-time-badge').innerText = dayData.time;
+                document.getElementById('day-activity-title').innerText = dayData.title;
+                document.getElementById('day-activity-desc').innerText = dayData.desc;
+                document.getElementById('day-icon-box').innerHTML = `<i class="fa-solid ${dayData.icon}"></i>`;
+            }
+        }
+
+        function filterVenues(cat) {
+            const btns = document.querySelectorAll('.vfilter-btn');
+            btns.forEach(b => {
+                b.className = 'vfilter-btn px-3 py-1.5 rounded-lg text-slate-400 hover:text-white';
+            });
+            const activeBtn = document.getElementById(`vfilter-${cat}`);
+            if (activeBtn) activeBtn.className = 'vfilter-btn px-3 py-1.5 rounded-lg bg-blue-600 text-white';
+
+            const cards = document.querySelectorAll('.venue-card');
+            cards.forEach(card => {
+                const categories = card.getAttribute('data-category') || '';
+                if (cat === 'all' || categories.includes(cat)) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        function setDeckZoneTab(zoneKey) {
+            state.activeZoneTab = zoneKey;
+            renderDeckInspector();
+        }
+
+        function setDeckShip(ship) {
+            state.deckShip = ship;
+            const btn1 = document.getElementById('deck-btn-opt1');
+            const btn2 = document.getElementById('deck-btn-opt2');
+
+            if (ship === 'opt1') {
+                if (btn1) btn1.className = 'px-3.5 py-1.5 rounded-lg bg-blue-600 text-white shadow-sm transition';
+                if (btn2) btn2.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition';
+            } else {
+                if (btn2) btn2.className = 'px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm transition';
+                if (btn1) btn1.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition';
+            }
+
+            const availableDecks = Object.keys(DECK_PLANS_DATA[ship].decks).map(Number);
+            if (!availableDecks.includes(state.selectedDeck)) {
+                state.selectedDeck = availableDecks[0];
+            }
+
+            renderDeckButtons();
+            renderDeckInspector();
+        }
+
+        function filterDeckButtons(cat) {
+            state.deckCategoryFilter = cat;
+            const btns = document.querySelectorAll('.dfilter-btn');
+            btns.forEach(b => {
+                b.className = 'dfilter-btn px-3 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white';
+            });
+            const activeBtn = document.getElementById(`dfilter-${cat}`);
+            if (activeBtn) activeBtn.className = 'dfilter-btn px-3 py-1 rounded-lg bg-blue-600 text-white';
+
+            renderDeckButtons();
+        }
+
+        function renderDeckButtons() {
+            const shipData = DECK_PLANS_DATA[state.deckShip];
+            const grid = document.getElementById('deck-buttons-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            Object.keys(shipData.decks).map(Number).sort((a, b) => a - b).forEach(deckNum => {
+                const deck = shipData.decks[deckNum];
+                if (state.deckCategoryFilter === 'all' || deck.zone.includes(state.deckCategoryFilter)) {
+                    const btn = document.createElement('button');
+                    const isSelected = deckNum === state.selectedDeck;
+                    btn.className = `px-3 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${isSelected ? 'bg-amber-500 text-slate-950 shadow-md ring-2 ring-amber-400/50' : 'bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700'}`;
+                    btn.innerHTML = `<i class="fa-solid fa-layer-group text-[10px]"></i> Deck ${deckNum}`;
+                    btn.onclick = () => {
+                        state.selectedDeck = deckNum;
+                        renderDeckButtons();
+                        renderDeckInspector();
+                    };
+                    grid.appendChild(btn);
+                }
+            });
+        }
+
+        function renderDeckInspector() {
+            const shipData = DECK_PLANS_DATA[state.deckShip];
+            const deckInfo = shipData.decks[state.selectedDeck] || Object.values(shipData.decks)[0];
+            const inspector = document.getElementById('deck-inspector-card');
+            if (!inspector) return;
+
+            const deckPadded = String(state.selectedDeck).padStart(2, '0');
+
+            const tagsList = (deckInfo.stateroomTags || []).map(t => 
+                `<span class="bg-slate-800 text-amber-300 border border-slate-700/80 px-2.5 py-1 rounded-lg text-[11px] font-semibold flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-tag text-[9px] text-amber-400"></i> ${t}
+                </span>`
+            ).join('');
+
+            let noiseBadgeClass = "bg-emerald-500/10 text-emerald-300 border-emerald-500/30";
+            let noiseIcon = "fa-leaf";
+            if (deckInfo.noiseLevel === 'high') {
+                noiseBadgeClass = "bg-rose-500/10 text-rose-300 border-rose-500/30";
+                noiseIcon = "fa-volume-high";
+            } else if (deckInfo.noiseLevel === 'active' || deckInfo.noiseLevel === 'moderate') {
+                noiseBadgeClass = "bg-amber-500/10 text-amber-300 border-amber-500/30";
+                noiseIcon = "fa-volume-low";
+            }
+
+            const venuesList = deckInfo.venues.map(v => 
+                `<li class="flex items-center gap-2 text-xs text-slate-200">
+                    <i class="fa-solid fa-circle-check text-amber-400 text-xs"></i>
+                    <span>${v}</span>
+                </li>`
+            ).join('');
+
+            const isAll = state.activeZoneTab === 'all';
+            const isFwd = state.activeZoneTab === 'fwd';
+            const isMid = state.activeZoneTab === 'mid';
+            const isAft = state.activeZoneTab === 'aft';
+
+            inspector.innerHTML = `
+                <!-- Header Info Bar -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full ${state.deckShip === 'opt1' ? 'bg-blue-900 text-amber-300' : 'bg-slate-800 text-emerald-400'}">
+                                ${shipData.shipName} (${shipData.class})
+                            </span>
+                            <span class="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${noiseBadgeClass} flex items-center gap-1">
+                                <i class="fa-solid ${noiseIcon}"></i> ${deckInfo.noise || 'Standard Deck'}
+                            </span>
+                        </div>
+                        <h4 class="heading-serif text-2xl font-bold text-white mt-2">${deckInfo.name}</h4>
+                        <p class="text-xs text-slate-300 mt-1 max-w-2xl">${deckInfo.desc}</p>
+                    </div>
+                </div>
+
+                <!-- Main Grid Section -->
+                <div class="grid lg:grid-cols-12 gap-6">
+
+                    <!-- Left Column: Public Venues -->
+                    <div class="lg:col-span-5 bg-slate-900/80 p-5 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-4">
+                        <div>
+                            <div class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-2 mb-3">
+                                <i class="fa-solid fa-utensils"></i> Public Venues & Highlights on Deck ${state.selectedDeck}
+                            </div>
+                            <ul class="space-y-2.5">
+                                ${venuesList}
+                            </ul>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-800/80">
+                            <div class="text-[11px] font-semibold text-slate-400 mb-2">Stateroom Category Tiers Present:</div>
+                            <div class="flex flex-wrap gap-1.5">
+                                ${tagsList}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Interactive Spatial Zone Blueprint -->
+                    <div class="lg:col-span-7 bg-slate-900/90 p-5 rounded-2xl border border-slate-800 space-y-5">
+                        
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <div class="text-xs font-bold text-blue-400 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-vector-square"></i> Architectural Deck Layout & Zone Mapping
+                            </div>
+                            <span class="text-[11px] text-slate-400">Deck ${state.selectedDeck} Spatial Breakdown</span>
+                        </div>
+
+                        <!-- Interactive Ship Deck Profile Bar Graphic -->
+                        <div class="space-y-2">
+                            <div class="text-[11px] font-semibold text-slate-300 flex justify-between items-center">
+                                <span>Click zone segment to inspect section details:</span>
+                                <span class="text-amber-400 text-[10px]"><i class="fa-solid fa-hand-pointer mr-1"></i>Interactive Map</span>
+                            </div>
+
+                            <!-- Ship Hull Sectional Silhouette Graphic -->
+                            <div class="relative w-full bg-slate-950 p-1.5 rounded-2xl border border-slate-800 flex items-center gap-1 shadow-inner overflow-hidden">
+                                
+                                <!-- Forward (Bow) Zone Segment -->
+                                <button onclick="setDeckZoneTab('fwd')" class="group flex-1 py-3 px-2 rounded-xl text-center transition relative overflow-hidden ${isFwd || isAll ? 'bg-gradient-to-r from-blue-600/40 to-blue-500/20 border border-blue-400/60' : 'bg-slate-900/60 hover:bg-slate-800 border border-slate-800'}">
+                                    <div class="text-xs font-extrabold text-blue-300 group-hover:text-white flex items-center justify-center gap-1">
+                                        <i class="fa-solid fa-anchor text-[10px]"></i> Forward
+                                    </div>
+                                    <div class="text-[10px] text-slate-400 font-mono mt-0.5">Bow Section</div>
+                                    ${isFwd ? '<div class="absolute bottom-0 inset-x-0 h-1 bg-amber-400 rounded-full"></div>' : ''}
+                                </button>
+
+                                <!-- Mid-Ship Zone Segment -->
+                                <button onclick="setDeckZoneTab('mid')" class="group flex-1 py-3 px-2 rounded-xl text-center transition relative overflow-hidden ${isMid || isAll ? 'bg-gradient-to-r from-amber-500/30 to-amber-600/20 border border-amber-400/60' : 'bg-slate-900/60 hover:bg-slate-800 border border-slate-800'}">
+                                    <div class="text-xs font-extrabold text-amber-300 group-hover:text-white flex items-center justify-center gap-1">
+                                        <i class="fa-solid fa-arrows-left-right text-[10px]"></i> Mid-Ship
+                                    </div>
+                                    <div class="text-[10px] text-slate-400 font-mono mt-0.5">Atrium & Elevators</div>
+                                    ${isMid ? '<div class="absolute bottom-0 inset-x-0 h-1 bg-amber-400 rounded-full"></div>' : ''}
+                                </button>
+
+                                <!-- Aft (Stern) Zone Segment -->
+                                <button onclick="setDeckZoneTab('aft')" class="group flex-1 py-3 px-2 rounded-xl text-center transition relative overflow-hidden ${isAft || isAll ? 'bg-gradient-to-r from-emerald-600/30 to-emerald-500/20 border border-emerald-400/60' : 'bg-slate-900/60 hover:bg-slate-800 border border-slate-800'}">
+                                    <div class="text-xs font-extrabold text-emerald-300 group-hover:text-white flex items-center justify-center gap-1">
+                                        <i class="fa-solid fa-ship text-[10px]"></i> Aft
+                                    </div>
+                                    <div class="text-[10px] text-slate-400 font-mono mt-0.5">Stern Section</div>
+                                    ${isAft ? '<div class="absolute bottom-0 inset-x-0 h-1 bg-amber-400 rounded-full"></div>' : ''}
+                                </button>
+                            </div>
+
+                            <div class="flex justify-between items-center text-[10px] text-slate-400 px-1 pt-1">
+                                <button onclick="setDeckZoneTab('all')" class="hover:text-amber-300 underline font-semibold">
+                                    ${isAll ? '✓ Showing All Zones' : 'Show All Zones Overview'}
+                                </button>
+                                <span><i class="fa-solid fa-elevator mr-1 text-blue-400"></i>Elevator Hubs: Fwd & Mid-Ship</span>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Zone Detail Cards Grid -->
+                        <div class="grid sm:grid-cols-3 gap-3 pt-2">
+                            
+                            <!-- Forward Detail Box -->
+                            <div class="p-3 rounded-xl border text-xs space-y-1.5 transition ${isFwd || isAll ? 'bg-blue-950/40 border-blue-500/40 ring-1 ring-blue-500/20' : 'bg-slate-950/40 border-slate-800 opacity-50'}">
+                                <div class="font-bold text-blue-300 flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                                    <span>Forward (Bow)</span>
+                                </div>
+                                <p class="text-[11px] text-slate-300 leading-relaxed">${deckInfo.fwd}</p>
+                            </div>
+
+                            <!-- Mid-Ship Detail Box -->
+                            <div class="p-3 rounded-xl border text-xs space-y-1.5 transition ${isMid || isAll ? 'bg-amber-950/30 border-amber-500/40 ring-1 ring-amber-500/20' : 'bg-slate-950/40 border-slate-800 opacity-50'}">
+                                <div class="font-bold text-amber-300 flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                                    <span>Mid-Ship (Central)</span>
+                                </div>
+                                <p class="text-[11px] text-slate-300 leading-relaxed">${deckInfo.mid}</p>
+                            </div>
+
+                            <!-- Aft Detail Box -->
+                            <div class="p-3 rounded-xl border text-xs space-y-1.5 transition ${isAft || isAll ? 'bg-emerald-950/30 border-emerald-500/40 ring-1 ring-emerald-500/20' : 'bg-slate-950/40 border-slate-800 opacity-50'}">
+                                <div class="font-bold text-emerald-300 flex items-center gap-1.5">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                    <span>Aft (Stern)</span>
+                                </div>
+                                <p class="text-[11px] text-slate-300 leading-relaxed">${deckInfo.aft}</p>
+                            </div>
+
+                        </div>
+
+                        <!-- Accommodation Category Text Box -->
+                        <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 flex-shrink-0">
+                                <i class="fa-solid fa-bed text-sm"></i>
+                            </div>
+                            <div class="text-xs">
+                                <strong class="text-white block font-semibold mb-0.5">Stateroom Summary (Deck ${state.selectedDeck}):</strong>
+                                <span class="text-slate-300">${deckInfo.cabins}</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+        }
+
+        function openQuizModal() {
+            document.getElementById('quiz-modal').classList.remove('hidden');
+        }
+
+        function closeQuizModal() {
+            document.getElementById('quiz-modal').classList.add('hidden');
+        }
+
+        function quizAnswer(qNum, value) {
+            state.quizAnswers[`q${qNum}`] = value;
+
+            const btns = document.querySelectorAll(`.quiz-q${qNum}`);
+            btns.forEach(b => {
+                b.className = `quiz-q${qNum} p-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:border-amber-400 text-left`;
+            });
+            document.getElementById(`q${qNum}-${value}`).className = `quiz-q${qNum} p-2.5 rounded-lg border border-amber-500 bg-amber-500/10 text-amber-300 font-bold text-left`;
+
+            if (state.quizAnswers.q1 && state.quizAnswers.q2) {
+                const resBox = document.getElementById('quiz-result');
+                const resTitle = document.getElementById('quiz-result-title');
+                const resDesc = document.getElementById('quiz-result-desc');
+
+                resBox.classList.remove('hidden');
+
+                if (state.quizAnswers.q1 === 'icon' || state.quizAnswers.q2 === 'icon') {
+                    resTitle.innerText = "Option 1: Legend of the Seas (Icon Class)";
+                    resDesc.innerText = "You matched with Royal Caribbean's flagship mega-ship! Enjoy 28+ dining spots, 7 pools, Category 6 waterpark, and a private island stop at Perfect Day at CocoCay.";
+                } else {
+                    resTitle.innerText = "Option 2: Adventure of the Seas (Voyager Class)";
+                    resDesc.innerText = "You matched with the Voyager Class favorite! Enjoy maximum savings ($1,763 per couple), a classic Royal Promenade, and a visit to historic downtown Nassau.";
+                }
+            }
+        }
+
+        function copyQuoteSummary() {
+            const guests = state.travelers;
+            const flight = state.flightClass === 'main' ? 'Main Cabin ($274/person)' : 'Comfort+ ($314/person)';
+            const term = state.termMonths;
+
+            const text = `SOUTHERN CARIBBEAN CRUISE VACATION QUOTE BREAKDOWN (${guests} Guests)
+- Airfare Tier: Delta ${flight} (Fly-in 1 day prior to Fort Lauderdale)
+- Cruise Financing Term: ${term} Months (Applies to Cruise Fare)
+
+OPTION 1: Legend of the Seas (Icon Class)
+- Grand Total: ${document.getElementById('out-opt1-grand').innerText} (${document.getElementById('out-opt1-person').innerText})
+- Monthly Financing: ${document.getElementById('out-opt1-monthly').innerText} ${document.getElementById('out-opt1-monthly-pp').innerText}
+- Upfront Costs: ${document.getElementById('out-opt1-upfront').innerText}
+
+OPTION 2: Adventure of the Seas (Voyager Class)
+- Grand Total: ${document.getElementById('out-opt2-grand').innerText} (${document.getElementById('out-opt2-person').innerText})
+- Monthly Financing: ${document.getElementById('out-opt2-monthly').innerText} ${document.getElementById('out-opt2-monthly-pp').innerText}
+- Upfront Costs: ${document.getElementById('out-opt2-upfront').innerText}
+
+${document.getElementById('out-variance-text').innerText}`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Quote breakdown copied to clipboard!");
+            }).catch(() => {
+                const textarea = document.createElement("textarea");
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast("Quote breakdown copied to clipboard!");
+            });
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = msg;
+            toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+            }, 3000);
+        }
+
+        // Initialize App on Load
+        window.onload = function() {
+            switchTab('dashboard');
+            updateCalculator();
+            setItineraryShip('opt1');
+            setDeckShip('opt1');
+        };
+    </script>
+</body>
+</html>
