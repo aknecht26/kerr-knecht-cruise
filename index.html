@@ -1444,6 +1444,7 @@
             if (!inspector) return;
 
             const deckPadded = String(state.selectedDeck).padStart(2, '0');
+            const officialUrl = `${shipData.baseUrl}${deckPadded}`;
 
             const tagsList = (deckInfo.stateroomTags || []).map(t => 
                 `<span class="bg-slate-800 text-amber-300 border border-slate-700/80 px-2.5 py-1 rounded-lg text-[11px] font-semibold flex items-center gap-1.5 shadow-sm">
@@ -1487,6 +1488,12 @@
                         </div>
                         <h4 class="heading-serif text-2xl font-bold text-white mt-2">${deckInfo.name}</h4>
                         <p class="text-xs text-slate-300 mt-1 max-w-2xl">${deckInfo.desc}</p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <a href="${officialUrl}" target="_blank" rel="noopener noreferrer" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition inline-flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                            <i class="fa-solid fa-up-right-from-square"></i>
+                            <span>Official Deck ${deckPadded} Plan</span>
+                        </a>
                     </div>
                 </div>
 
